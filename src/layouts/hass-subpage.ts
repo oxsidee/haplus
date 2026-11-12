@@ -109,7 +109,7 @@ class HassSubpage extends LitElement {
           align-items: center;
           font-size: var(--ha-font-size-xl);
           height: var(--header-height);
-          font-weight: var(--ha-font-weight-normal);
+          font-weight: var(--ha-font-weight-medium);
           color: var(--app-header-text-color, white);
           border-bottom: var(--app-header-border-bottom, none);
           box-sizing: border-box;

@@ -114,7 +114,7 @@ export const haTopAppBarFixedStyles = css`
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: var(--ha-font-size-xl);
-    font-weight: var(--ha-font-weight-normal);
+    font-weight: var(--ha-font-weight-medium);
     line-height: var(--header-height);
     padding-inline-start: var(--ha-space-6);
   }

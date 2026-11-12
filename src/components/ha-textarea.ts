@@ -219,6 +219,12 @@ export class HaTextArea extends WaInputMixin(LitElement) {
 
       /* Base styling */
       wa-textarea::part(base) {
+        border-radius: var(
+          --ha-field-border-radius,
+          var(--ha-border-radius-sm)
+        );
+        box-shadow: inset 0 0 0 1px var(--ha-field-border-color, transparent);
+        overflow: hidden;
         min-height: 56px;
         padding-top: var(--ha-space-6);
         padding-bottom: var(--ha-space-2);
@@ -235,7 +241,10 @@ export class HaTextArea extends WaInputMixin(LitElement) {
         left: 0;
         right: 0;
         height: 1px;
-        background-color: var(--ha-color-border-neutral-loud);
+        background-color: var(
+          --ha-field-underline-color,
+          var(--ha-color-border-neutral-loud)
+        );
         transition:
           height var(--wa-transition-normal) ease-in-out,
           background-color var(--wa-transition-normal) ease-in-out;
@@ -244,7 +253,10 @@ export class HaTextArea extends WaInputMixin(LitElement) {
       :host(:focus-within) wa-textarea::part(base)::after,
       :host([focused]) wa-textarea::part(base)::after {
         height: 2px;
-        background-color: var(--primary-color);
+        background-color: var(
+          --ha-field-focus-underline-color,
+          var(--primary-color)
+        );
       }
 
       :host(:focus-within) wa-textarea.invalid::part(base)::after,

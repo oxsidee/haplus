@@ -57,9 +57,10 @@ export class HaBigNumber extends LitElement {
     return [
       css`
         :host {
-          font-size: 57px;
-          line-height: 1.12;
-          letter-spacing: -0.25px;
+          font-size: 76px;
+          line-height: 1.05;
+          font-weight: var(--ha-font-weight-thin, 200);
+          letter-spacing: -0.04em;
         }
         .value {
           display: flex;

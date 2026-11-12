@@ -1443,8 +1443,10 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
           display: flex;
           align-items: center;
           font-size: var(--ha-font-size-xl);
-          padding: 0px 12px;
-          padding-right: calc(12px + var(--safe-area-inset-right, 0px));
+          padding: 0px clamp(12px, 3vw, 44px);
+          padding-right: calc(
+            clamp(12px, 3vw, 44px) + var(--safe-area-inset-right, 0px)
+          );
           font-weight: var(--ha-font-weight-normal);
           box-sizing: border-box;
         }
@@ -1456,8 +1458,12 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
             calc(4px + var(--safe-area-inset-left, 0px));
         }
         .main-title {
-          margin-inline-start: var(--ha-space-6);
+          margin-inline-start: var(--ha-space-4);
           line-height: var(--ha-line-height-normal);
+          font-size: 13px;
+          font-weight: var(--ha-font-weight-medium);
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
           flex-grow: 1;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -1471,6 +1477,22 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
           white-space: nowrap;
           display: flex;
           align-items: center;
+          gap: var(--ha-space-2);
+        }
+        .toolbar ha-menu-button,
+        .toolbar ha-icon-button-arrow-prev,
+        .action-items ha-icon-button {
+          --ha-icon-button-size: 44px;
+          --mdc-icon-size: 20px;
+          border-radius: var(--ha-border-radius-pill);
+          box-shadow: inset 0 0 0 1px var(--divider-color);
+          color: var(--secondary-text-color);
+        }
+        .edit-mode .toolbar ha-menu-button,
+        .edit-mode .toolbar ha-icon-button-arrow-prev,
+        .edit-mode .action-items ha-icon-button {
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+          color: inherit;
         }
         .edit-mode .action-items ha-icon-button[disabled] {
           --ha-color-on-disabled-quiet: color-mix(

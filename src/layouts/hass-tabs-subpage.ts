@@ -383,8 +383,8 @@ export class HassTabsSubpage extends LitElement {
           );
           padding-top: var(--safe-area-inset-top);
           padding-right: var(--safe-area-inset-right);
-          background-color: var(--sidebar-background-color);
-          font-weight: var(--ha-font-weight-normal);
+          background-color: var(--app-header-background-color);
+          font-weight: var(--ha-font-weight-medium);
           border-bottom: 1px solid var(--divider-color);
           box-sizing: border-box;
         }
@@ -454,7 +454,7 @@ export class HassTabsSubpage extends LitElement {
             var(--safe-area-inset-bottom)
             calc(16px + var(--safe-area-inset-left));
           box-sizing: border-box;
-          background-color: var(--sidebar-background-color);
+          background-color: var(--app-header-background-color);
           border-top: 1px solid var(--divider-color);
           justify-content: space-around;
           z-index: 2;
@@ -463,8 +463,19 @@ export class HassTabsSubpage extends LitElement {
         }
 
         #tabbar:not(.bottom-bar) {
-          flex: 1;
+          flex: 0 1 auto;
+          margin: 0 auto;
           justify-content: center;
+          align-items: center;
+          gap: var(--ha-space-1);
+          padding: var(--ha-space-1);
+          border-radius: var(--ha-border-radius-pill);
+          background-color: rgba(var(--rgb-primary-text-color), 0.04);
+          box-shadow: inset 0 0 0 1px var(--divider-color);
+        }
+
+        #tabbar:not(.bottom-bar) > a {
+          border-radius: var(--ha-border-radius-pill);
         }
 
         :host(:not([narrow])) #toolbar-icon {

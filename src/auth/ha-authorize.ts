@@ -128,7 +128,14 @@ export class HaAuthorize extends provideLiteI18nMixin(
           );
           color: var(--primary-text-color);
           position: relative;
-          padding: 16px;
+          padding: var(--ha-space-8);
+          border-radius: var(--ha-border-radius-4xl);
+          box-shadow: var(--ha-box-shadow-l);
+        }
+        @media (max-width: 450px) {
+          .card-content {
+            padding: var(--ha-space-6) var(--ha-space-5);
+          }
         }
         .action {
           margin: 16px 0 8px;
@@ -150,10 +157,12 @@ export class HaAuthorize extends provideLiteI18nMixin(
           --mdc-icon-size: var(--ha-space-5);
         }
         h1 {
-          font-size: var(--ha-font-size-3xl);
-          font-weight: var(--ha-font-weight-normal);
-          margin-top: 16px;
-          margin-bottom: 16px;
+          font-size: 36px;
+          line-height: 1.05;
+          font-weight: var(--ha-font-weight-display, 300);
+          letter-spacing: var(--ha-letter-spacing-display, -0.03em);
+          margin-top: 0;
+          margin-bottom: var(--ha-space-6);
         }
       </style>
 
@@ -280,13 +289,6 @@ export class HaAuthorize extends provideLiteI18nMixin(
         undefined,
         true
       );
-    }
-
-    if (
-      window.innerWidth > 450 &&
-      !matchMedia("(prefers-reduced-motion)").matches
-    ) {
-      import("../resources/particles");
     }
 
     // If we are logging into the instance that is hosting this auth form

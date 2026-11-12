@@ -108,9 +108,12 @@ export class HaAuthFlow extends LitElement {
     return html`
       <style>
         a.forgot-password {
-          color: var(--primary-color);
+          color: var(--secondary-text-color);
           text-decoration: none;
-          font-size: 0.875rem;
+          font-size: var(--ha-font-size-m);
+        }
+        a.forgot-password:hover {
+          color: var(--primary-text-color);
         }
         .space-between {
           display: flex;
@@ -118,8 +121,7 @@ export class HaAuthFlow extends LitElement {
           align-items: center;
         }
         form {
-          text-align: center;
-          max-width: 336px;
+          text-align: start;
           width: 100%;
         }
         ha-auth-form {
@@ -131,6 +133,7 @@ export class HaAuthFlow extends LitElement {
         }
         .action ha-button {
           width: 100%;
+          --ha-button-height: 52px;
         }
       </style>
       <form @submit=${this._handleSubmit}>${this._renderForm()}</form>

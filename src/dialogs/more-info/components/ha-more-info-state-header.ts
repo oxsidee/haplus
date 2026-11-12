@@ -85,9 +85,10 @@ export class HaMoreInfoStateHeader extends LitElement {
     }
     .state {
       font-style: normal;
-      font-weight: var(--ha-font-weight-normal);
-      font-size: 36px;
-      line-height: var(--ha-line-height-condensed);
+      font-weight: var(--ha-font-weight-thin, 200);
+      font-size: 64px;
+      letter-spacing: -0.04em;
+      line-height: 1;
     }
     .time-row {
       position: relative;
@@ -104,10 +105,10 @@ export class HaMoreInfoStateHeader extends LitElement {
     }
     .last-changed {
       font-style: normal;
-      font-size: var(--ha-font-size-l);
-      font-weight: var(--ha-font-weight-medium);
+      font-size: var(--ha-font-size-m);
+      font-weight: var(--ha-font-weight-normal);
+      color: var(--secondary-text-color);
       line-height: var(--ha-line-height-normal);
-      letter-spacing: 0.1px;
       padding: var(--ha-space-1) 0;
       cursor: pointer;
       user-select: none;

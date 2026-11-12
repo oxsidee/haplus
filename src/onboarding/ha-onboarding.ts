@@ -204,12 +204,6 @@ class HaOnboarding extends litLocalizeLiteMixin(HassElement) {
     this.addEventListener("onboarding-progress", (ev) =>
       this._handleProgress(ev)
     );
-    if (
-      window.innerWidth > 450 &&
-      !matchMedia("(prefers-reduced-motion)").matches
-    ) {
-      import("../resources/particles");
-    }
     makeDialogManager(this);
     import("../components/ha-language-picker");
   }
@@ -517,8 +511,17 @@ class HaOnboarding extends litLocalizeLiteMixin(HassElement) {
   }
 
   static styles = css`
+    ha-card {
+      --ha-card-border-radius: var(--ha-border-radius-4xl);
+      box-shadow: var(--ha-box-shadow-l);
+    }
     .card-content {
-      padding: 32px;
+      padding: 40px;
+    }
+    @media (max-width: 450px) {
+      .card-content {
+        padding: 28px 20px;
+      }
     }
     ha-progress-bar {
       --ha-progress-bar-border-radius: 0;

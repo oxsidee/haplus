@@ -467,7 +467,10 @@ export class HaInput extends WaInputMixin(LitElement) {
       :host([appearance="outlined"]) wa-input::part(base) {
         border: 1px solid var(--ha-color-border-neutral-quiet);
         background-color: var(--card-background-color);
-        border-radius: var(--ha-border-radius-md);
+        border-radius: var(
+          --ha-field-border-radius,
+          var(--ha-border-radius-md)
+        );
         transition: border-color var(--wa-transition-normal) ease-in-out;
       }
 
@@ -478,7 +481,10 @@ export class HaInput extends WaInputMixin(LitElement) {
         left: 0;
         right: 0;
         height: 1px;
-        background-color: var(--ha-color-border-neutral-loud);
+        background-color: var(
+          --ha-field-underline-color,
+          var(--ha-color-border-neutral-loud)
+        );
         transition:
           height var(--wa-transition-normal) ease-in-out,
           background-color var(--wa-transition-normal) ease-in-out;
@@ -486,7 +492,10 @@ export class HaInput extends WaInputMixin(LitElement) {
 
       :host([appearance="material"]:focus-within) wa-input::part(base)::after {
         height: 2px;
-        background-color: var(--primary-color);
+        background-color: var(
+          --ha-field-focus-underline-color,
+          var(--primary-color)
+        );
       }
 
       :host([appearance="material"]:focus-within)

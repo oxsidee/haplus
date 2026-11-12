@@ -3,9 +3,9 @@ import { extractDerivedVars, extractVar } from "../../common/style/derived-css-v
 
 export const typographyStyles = css`
   html {
-    --ha-font-family-body: Roboto, Noto, sans-serif;
-    --ha-font-family-code: monospace;
-    --ha-font-family-longform: ui-sans-serif, system-ui, sans-serif;
+    --ha-font-family-body: "Inter Tight", Inter, Roboto, Noto, system-ui, sans-serif;
+    --ha-font-family-code: "JetBrains Mono", ui-monospace, monospace;
+    --ha-font-family-longform: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
 
     font-size: 14px;
     --ha-font-size-scale: 1;
@@ -26,7 +26,11 @@ export const typographyStyles = css`
 
     --ha-font-family-heading: var(--ha-font-family-body);
     --ha-font-weight-body: var(--ha-font-weight-normal);
-    --ha-font-weight-heading: var(--ha-font-weight-bold);
+    --ha-font-weight-heading: var(--ha-font-weight-medium);
+    --ha-font-weight-display: 300;
+    --ha-font-weight-thin: 200;
+    --ha-letter-spacing-display: -0.03em;
+    --ha-letter-spacing-overline: 0.24em;
     --ha-font-weight-action: var(--ha-font-weight-medium);
 
     --ha-line-height-condensed: 1.2;

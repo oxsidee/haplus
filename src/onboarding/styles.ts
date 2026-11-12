@@ -5,10 +5,11 @@ export const onBoardingStyles = css`
     padding: 32px;
   }
   h1 {
-    font-size: var(--ha-font-size-3xl);
-    font-weight: var(--ha-font-weight-normal);
-    line-height: var(--ha-line-height-condensed);
-    margin-bottom: 8px;
+    font-size: clamp(30px, 5vw, 40px);
+    font-weight: var(--ha-font-weight-display, 300);
+    letter-spacing: var(--ha-letter-spacing-display, -0.03em);
+    line-height: 1.05;
+    margin-bottom: 12px;
   }
   ha-icon-button-arrow-prev {
     margin-left: -12px;
@@ -16,6 +17,7 @@ export const onBoardingStyles = css`
   }
   p {
     font-size: 1rem;
+    color: var(--secondary-text-color);
     line-height: var(--ha-line-height-normal);
     margin-top: 0;
     margin-bottom: 32px;

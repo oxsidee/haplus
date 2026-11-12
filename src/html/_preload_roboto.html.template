@@ -9,7 +9,7 @@
           el.crossOrigin = "anonymous";
           document.head.appendChild(el);
         }
-        _pf("/static/fonts/roboto/Roboto-Regular.woff2");
-        _pf("/static/fonts/roboto/Roboto-Medium.woff2");
+        _pf("/static/fonts/inter-tight/inter-tight-latin-wght-normal.woff2");
+        _pf("/static/fonts/inter-tight/inter-tight-cyrillic-wght-normal.woff2");
       }
     </script>

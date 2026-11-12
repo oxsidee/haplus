@@ -41,10 +41,10 @@ export const waMainStyles = css`
     --wa-form-control-padding-block: 0.75em;
     --wa-form-control-value-line-height: var(--wa-line-height-condensed);
     --wa-form-control-value-font-weight: var(--wa-font-weight-body);
-    --wa-form-control-border-radius: var(--wa-border-radius-l);
+    --wa-form-control-border-radius: var(--ha-control-border-radius, var(--wa-border-radius-l));
     --wa-form-control-border-style: var(--wa-border-style);
     --wa-form-control-border-width: var(--wa-border-width-s);
-    --wa-form-control-height: 40px;
+    --wa-form-control-height: 44px;
     --wa-form-control-padding-inline: var(--ha-space-3);
   }
 

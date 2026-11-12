@@ -22,10 +22,13 @@ export interface HomeDashboardStrategyConfig {
   type: "home";
   alert_entities?: SecurityAlertEntityConfig[];
   favorite_entities?: string[];
+  dock_items?: string[];
+  home_picture?: string;
   home_panel?: boolean;
   hide_welcome_message?: boolean;
   hide_suggested_entities?: boolean;
   shortcuts?: ShortcutItem[];
+  classic_layout?: boolean;
 }
 
 @customElement("home-dashboard-strategy")
@@ -65,6 +68,16 @@ export class HomeDashboardStrategy extends ReactiveElement {
     const areaViews = areas.map<LovelaceViewRawConfig>((area) => {
       const path = `areas-${area.area_id}`;
 
+      if (!config.classic_layout) {
+        return {
+          title: area.name,
+          path: path,
+          subview: true,
+          type: "panel",
+          cards: [{ type: "area-scene", area: area.area_id }],
+        };
+      }
+
       return {
         title: area.name,
         path: path,
@@ -100,19 +113,51 @@ export class HomeDashboardStrategy extends ReactiveElement {
 
     return {
       views: [
-        {
-          icon: "mdi:home",
-          path: "overview",
-          strategy: {
-            type: "home-overview",
-            alert_entities: config.alert_entities,
-            favorite_entities: config.favorite_entities,
-            home_panel: config.home_panel,
-            hide_welcome_message: config.hide_welcome_message,
-            hide_suggested_entities: config.hide_suggested_entities,
-            shortcuts: config.shortcuts,
-          } satisfies HomeOverviewViewStrategyConfig,
-        },
+        config.classic_layout
+          ? {
+              icon: "mdi:home",
+              path: "overview",
+              strategy: {
+                type: "home-overview",
+                alert_entities: config.alert_entities,
+                favorite_entities: config.favorite_entities,
+                home_panel: config.home_panel,
+                hide_welcome_message: config.hide_welcome_message,
+                hide_suggested_entities: config.hide_suggested_entities,
+                shortcuts: config.shortcuts,
+              } satisfies HomeOverviewViewStrategyConfig,
+            }
+          : {
+              icon: "mdi:home",
+              path: "overview",
+              type: "panel",
+              cards: [
+                {
+                  type: "home-scene",
+                  favorite_entities: config.favorite_entities,
+                  dock_items: config.dock_items,
+                  home_picture: config.home_picture,
+                },
+              ],
+            },
+        ...(config.classic_layout
+          ? []
+          : [
+              {
+                icon: "mdi:view-dashboard-outline",
+                path: "classic",
+                subview: true,
+                strategy: {
+                  type: "home-overview",
+                  alert_entities: config.alert_entities,
+                  favorite_entities: config.favorite_entities,
+                  home_panel: config.home_panel,
+                  hide_welcome_message: config.hide_welcome_message,
+                  hide_suggested_entities: config.hide_suggested_entities,
+                  shortcuts: config.shortcuts,
+                } satisfies HomeOverviewViewStrategyConfig,
+              },
+            ]),
         ...areaViews,
         mediaPlayersView,
         otherDevicesView,

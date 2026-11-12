@@ -67,11 +67,15 @@ export class HaTab extends LitElement {
       flex-shrink: 0;
     }
 
-    :host(:not([narrow])) div::before,
-    :host(:not([narrow])) div::after {
-      content: "";
-      width: var(--ha-space-8);
-      min-width: 0;
+    :host(:not([narrow])) div {
+      height: 40px;
+      padding: 0 var(--ha-space-5);
+      border-radius: var(--ha-border-radius-pill);
+      color: var(--secondary-text-color);
+      font-weight: var(--ha-font-weight-medium);
+      transition:
+        background-color var(--ha-animation-duration-normal) ease,
+        color var(--ha-animation-duration-normal) ease;
     }
 
     .badge {
@@ -119,11 +123,27 @@ export class HaTab extends LitElement {
     }
 
     :host([active]) {
-      color: var(--primary-color);
+      color: var(--primary-text-color);
     }
 
     :host(:not([narrow])[active]) div {
-      border-bottom: 2px solid var(--primary-color);
+      background-color: var(--primary-text-color);
+      color: var(--primary-background-color);
+    }
+
+    :host(:not([narrow])[active]) .badge {
+      background-color: var(--primary-background-color);
+      color: var(--primary-text-color);
+    }
+
+    :host([narrow][active]) .icon {
+      background-color: rgba(var(--rgb-primary-text-color), 0.08);
+      border-radius: var(--ha-border-radius-pill);
+    }
+
+    :host([narrow]) .icon {
+      padding: 2px 14px;
+      transition: background-color var(--ha-animation-duration-normal) ease;
     }
 
     :host([narrow]) {

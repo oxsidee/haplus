@@ -78,11 +78,11 @@ export class HaTileIcon extends LitElement {
   static styles = css`
     :host {
       --tile-icon-color: var(--disabled-color);
-      --tile-icon-opacity: 0.2;
-      --tile-icon-hover-opacity: 0.35;
+      --tile-icon-opacity: 0.16;
+      --tile-icon-hover-opacity: 0.28;
       --tile-icon-border-radius: var(
         --ha-tile-icon-border-radius,
-        var(--ha-border-radius-pill)
+        var(--ha-border-radius-lg)
       );
       --tile-icon-size: 36px;
       --mdc-icon-size: 24px;
@@ -96,7 +96,7 @@ export class HaTileIcon extends LitElement {
       pointer-events: auto;
     }
     :host([interactive]:active) {
-      transform: scale(1.2);
+      transform: scale(1.08);
     }
     :host([interactive]:hover) {
       --tile-icon-opacity: var(--tile-icon-hover-opacity);

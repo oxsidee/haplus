@@ -755,13 +755,13 @@ export class HaControlCircularSlider extends LitElement {
         stroke 180ms ease-in-out,
         opacity 180ms ease-in-out;
       stroke-linecap: round;
-      stroke-width: 24px;
+      stroke-width: var(--control-circular-slider-thickness, 14px);
     }
 
     .arc {
       fill: none;
       stroke-linecap: round;
-      stroke-width: 24px;
+      stroke-width: var(--control-circular-slider-thickness, 14px);
       transition:
         stroke-width 300ms ease-in-out,
         stroke-dasharray 300ms ease-in-out,
@@ -773,7 +773,7 @@ export class HaControlCircularSlider extends LitElement {
     .target {
       fill: none;
       stroke-linecap: round;
-      stroke-width: 18px;
+      stroke-width: 20px;
       stroke: white;
       transition:
         stroke-width 300ms ease-in-out,
@@ -786,8 +786,11 @@ export class HaControlCircularSlider extends LitElement {
     .target-border {
       fill: none;
       stroke-linecap: round;
-      stroke-width: 24px;
-      stroke: white;
+      stroke-width: 28px;
+      stroke: var(
+        --control-circular-slider-handle-border,
+        var(--card-background-color)
+      );
       transition:
         stroke-width 300ms ease-in-out,
         stroke-dasharray 300ms ease-in-out,

@@ -56,6 +56,15 @@ function copyFonts(staticDir) {
       filter: (src) => !src.includes(".") || src.endsWith(".woff2"),
     }
   );
+  fs.copySync(
+    npmPath("@fontsource-variable/inter-tight/files/"),
+    staticPath("fonts/inter-tight/"),
+    {
+      filter: (src) =>
+        !src.includes(".") ||
+        (src.endsWith("-wght-normal.woff2") && /(latin|cyrillic)/.test(src)),
+    }
+  );
 }
 
 function copyQrScannerWorker(staticDir) {

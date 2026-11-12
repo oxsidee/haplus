@@ -707,6 +707,19 @@ export interface TileActionsConfig {
   icon_double_tap_action?: ActionConfig;
 }
 
+export interface HomeSceneCardConfig extends LovelaceCardConfig {
+  type: "home-scene";
+  favorite_entities?: string[];
+  dock_items?: string[];
+  home_picture?: string;
+  power_entity?: string;
+}
+
+export interface AreaSceneCardConfig extends LovelaceCardConfig {
+  type: "area-scene";
+  area: string;
+}
+
 export interface TileCardConfig extends LovelaceCardConfig, TileActionsConfig {
   entity: string;
   name?: string | EntityNameItem | EntityNameItem[];

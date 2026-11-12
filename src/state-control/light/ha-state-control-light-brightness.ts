@@ -104,10 +104,10 @@ export class HaStateControlLightBrightness extends LitElement {
     ha-control-slider {
       position: relative;
       height: 45vh;
-      max-height: 320px;
+      max-height: var(--ha-brightness-slider-max-height, 360px);
       min-height: 200px;
-      --control-slider-thickness: 130px;
-      --control-slider-border-radius: var(--ha-border-radius-6xl);
+      --control-slider-thickness: 128px;
+      --control-slider-border-radius: 42px;
       --control-slider-color: var(--primary-color);
       --control-slider-background: var(--disabled-color);
       --control-slider-background-opacity: 0.2;

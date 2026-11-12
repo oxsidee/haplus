@@ -312,13 +312,18 @@ export const waInputStyles = css`
   /* Base common */
   .input::part(base) {
     background-color: var(--ha-color-form-background);
-    border-top-left-radius: var(--ha-border-radius-sm);
-    border-top-right-radius: var(--ha-border-radius-sm);
-    border-bottom-left-radius: var(--ha-border-radius-square);
-    border-bottom-right-radius: var(--ha-border-radius-square);
+    border-radius: var(--ha-field-border-radius, var(--ha-border-radius-sm));
     border: none;
+    box-shadow: inset 0 0 0 1px var(--ha-field-border-color, transparent);
     position: relative;
-    transition: background-color var(--wa-transition-normal) ease-in-out;
+    transition:
+      background-color var(--wa-transition-normal) ease-in-out,
+      box-shadow var(--wa-transition-normal) ease-in-out;
+  }
+
+  :host(:focus-within) .input::part(base) {
+    box-shadow: inset 0 0 0 1px
+      var(--ha-field-focus-border-color, var(--primary-color));
   }
 
   /* Focus outline removal */

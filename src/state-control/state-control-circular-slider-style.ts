@@ -78,7 +78,7 @@ export const stateControlCircularSliderStyle = css`
     --ha-icon-button-size: 48px;
   }
   .container.md ha-big-number {
-    font-size: 44px;
+    font-size: 56px;
   }
   .container.md .state {
     font-size: var(--ha-font-size-3xl);

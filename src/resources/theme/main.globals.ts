@@ -6,7 +6,7 @@ export const mainStyles = css`
     height: 100vh;
 
     /* for header */
-    --header-height: 56px;
+    --header-height: 68px;
 
     /* opacity for dark text on a light background */
     --dark-divider-opacity: 0.12;
@@ -50,7 +50,7 @@ export const mainStyles = css`
     --safe-height: calc(100vh - var(--safe-area-inset-top) - var(--safe-area-inset-bottom));
 
     /* dialog backdrop filter */
-    --ha-dialog-scrim-backdrop-filter: brightness(68%);
+    --ha-dialog-scrim-backdrop-filter: blur(6px) brightness(60%);
 
     /* scrollbar */
     scrollbar-color: var(--scrollbar-thumb-color) transparent;

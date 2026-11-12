@@ -37,7 +37,6 @@ class HaConfigNavigationList extends LitElement {
               <div
                 slot="start"
                 class=${page.iconColor ? "icon-background" : ""}
-                .style="background-color: ${page.iconColor || "undefined"}"
               >
                 <ha-svg-icon
                   .path=${page.iconPath}
@@ -81,10 +80,11 @@ class HaConfigNavigationList extends LitElement {
       padding: 8px;
     }
     .icon-background {
-      border-radius: var(--ha-border-radius-circle);
+      border-radius: var(--ha-border-radius-lg);
+      background-color: rgba(var(--rgb-primary-text-color), 0.06);
     }
     .icon-background ha-svg-icon {
-      color: #fff;
+      color: var(--primary-text-color);
     }
   `;
 }

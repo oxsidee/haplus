@@ -15,30 +15,30 @@ export const coreColorStyles = css`
     --ha-color-white: #ffffff;
 
     /* primary */
-    --ha-color-primary-05: #001721;
-    --ha-color-primary-10: #002e3e;
-    --ha-color-primary-20: #004156;
-    --ha-color-primary-30: #006787;
-    --ha-color-primary-40: #009ac7;
-    --ha-color-primary-50: #18bcf2;
-    --ha-color-primary-60: #37c8fd;
-    --ha-color-primary-70: #7bd4fb;
-    --ha-color-primary-80: #b9e6fc;
-    --ha-color-primary-90: #dff3fc;
-    --ha-color-primary-95: #eff9fe;
+    --ha-color-primary-05: #0b0c0e;
+    --ha-color-primary-10: #141517;
+    --ha-color-primary-20: #202328;
+    --ha-color-primary-30: #2e3238;
+    --ha-color-primary-40: #3b3f45;
+    --ha-color-primary-50: #5e636a;
+    --ha-color-primary-60: #7d838b;
+    --ha-color-primary-70: #a0a6ae;
+    --ha-color-primary-80: #c9cdd3;
+    --ha-color-primary-90: #e6e4df;
+    --ha-color-primary-95: #f3f2ef;
 
     /* neutral */
-    --ha-color-neutral-05: #141414;
-    --ha-color-neutral-10: #202020;
-    --ha-color-neutral-20: #363636;
-    --ha-color-neutral-30: #4a4a4a;
-    --ha-color-neutral-40: #5e5e5e;
-    --ha-color-neutral-50: #7a7a7a;
-    --ha-color-neutral-60: #989898;
-    --ha-color-neutral-70: #b1b1b1;
-    --ha-color-neutral-80: #cccccc;
-    --ha-color-neutral-90: #e6e6e6;
-    --ha-color-neutral-95: #f3f3f3;
+    --ha-color-neutral-05: #0b0c0e;
+    --ha-color-neutral-10: #16181c;
+    --ha-color-neutral-20: #202328;
+    --ha-color-neutral-30: #2e3238;
+    --ha-color-neutral-40: #5e636a;
+    --ha-color-neutral-50: #767b82;
+    --ha-color-neutral-60: #a0a6ae;
+    --ha-color-neutral-70: #c9cdd3;
+    --ha-color-neutral-80: #dddcd8;
+    --ha-color-neutral-90: #eceae5;
+    --ha-color-neutral-95: #f3f2ef;
 
     /* orange */
     --ha-color-orange-05: #280700;

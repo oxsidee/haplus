@@ -7,13 +7,13 @@ import { css } from "lit";
  */
 export const semanticColorStyles = css`
   html {
-    --ha-color-focus: var(--ha-color-neutral-60);
+    --ha-color-focus: var(--ha-color-neutral-50);
 
     /* text */
     --ha-color-text-primary: var(--ha-color-neutral-05);
     --ha-color-text-secondary: var(--ha-color-neutral-40);
     --ha-color-text-disabled: var(--ha-color-neutral-60);
-    --ha-color-text-link: var(--ha-color-primary-40);
+    --ha-color-text-link: var(--ha-color-primary-10);
 
     --ha-color-text-primary-inverted: var(--ha-color-white);
     --ha-color-text-secondary-inverted: var(--ha-color-neutral-20);
@@ -54,9 +54,9 @@ export const semanticColorStyles = css`
     --ha-color-fill-primary-normal-active: var(--ha-color-primary-90);
 
     /* fill primary loud */
-    --ha-color-fill-primary-loud-resting: var(--ha-color-primary-40);
+    --ha-color-fill-primary-loud-resting: var(--ha-color-primary-10);
     --ha-color-fill-primary-loud-hover: var(--ha-color-primary-30);
-    --ha-color-fill-primary-loud-active: var(--ha-color-primary-40);
+    --ha-color-fill-primary-loud-active: var(--ha-color-primary-10);
 
     /* fill neutral quiet */
     --ha-color-fill-neutral-quiet-resting: var(--ha-color-neutral-95);
@@ -182,9 +182,9 @@ export const semanticColorStyles = css`
 export const darkSemanticColorStyles = css`
   html {
     /* text */
-    --ha-color-text-primary: var(--white-color);
-    --ha-color-text-secondary: var(--ha-color-neutral-80);
-    --ha-color-text-link: var(--ha-color-primary-60);
+    --ha-color-text-primary: #f2f3f5;
+    --ha-color-text-secondary: var(--ha-color-neutral-60);
+    --ha-color-text-link: var(--ha-color-primary-95);
 
     --ha-color-text-primary-inverted: var(--ha-color-black);
     --ha-color-text-secondary-inverted: var(--ha-color-neutral-40);
@@ -205,6 +205,11 @@ export const darkSemanticColorStyles = css`
     --ha-color-border-warning-normal: var(--ha-color-orange-50);
     --ha-color-border-warning-loud: var(--ha-color-orange-50);
 
+    /* fill primary loud */
+    --ha-color-fill-primary-loud-resting: var(--ha-color-primary-95);
+    --ha-color-fill-primary-loud-hover: var(--ha-color-primary-80);
+    --ha-color-fill-primary-loud-active: var(--ha-color-primary-95);
+
     /* fill primary quiet */
     --ha-color-fill-primary-quiet-resting: var(--ha-color-primary-05);
     --ha-color-fill-primary-quiet-hover: var(--ha-color-primary-10);
@@ -218,7 +223,7 @@ export const darkSemanticColorStyles = css`
     /* fill neutral quiet */
     --ha-color-fill-neutral-quiet-resting: var(--ha-color-neutral-05);
     --ha-color-fill-neutral-quiet-hover: var(--ha-color-neutral-10);
-    --ha-color-fill-neutral-quiet-active: var(--ha-color-neutral-00);
+    --ha-color-fill-neutral-quiet-active: var(--ha-color-neutral-05);
 
     /* fill neutral normal */
     --ha-color-fill-neutral-normal-resting: var(--ha-color-neutral-10);
@@ -288,8 +293,9 @@ export const darkSemanticColorStyles = css`
     --ha-color-fill-success-loud-active: var(--ha-color-green-40);
 
     /* on primary */
-    --ha-color-on-primary-quiet: var(--ha-color-primary-70);
-    --ha-color-on-primary-normal: var(--ha-color-primary-60);
+    --ha-color-on-primary-quiet: var(--ha-color-primary-80);
+    --ha-color-on-primary-normal: var(--ha-color-primary-95);
+    --ha-color-on-primary-loud: var(--ha-color-primary-05);
 
     /* on neutral */
     --ha-color-on-neutral-quiet: var(--ha-color-neutral-70);
@@ -322,7 +328,7 @@ export const darkSemanticColorStyles = css`
     --ha-color-surface-lower: var(--ha-color-black);
     --ha-color-surface-default-inverted: var(--ha-color-white);
     --ha-color-surface-low-inverted: var(--ha-color-neutral-95);
-    --ha-color-surface-lower-inverted: var(--ha-color-90);
+    --ha-color-surface-lower-inverted: var(--ha-color-neutral-90);
     --ha-color-on-surface-default: var(--ha-color-neutral-95);
 
     /* forms */

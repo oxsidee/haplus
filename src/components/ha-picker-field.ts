@@ -154,9 +154,12 @@ export class HaPickerField extends PickerMixin(LitElement) {
           padding-inline-end: var(--ha-space-2);
           box-sizing: border-box;
           background-color: var(--ha-color-form-background);
-          border-radius: var(--ha-border-radius-sm);
-          border-end-end-radius: 0;
-          border-end-start-radius: 0;
+          border-radius: var(
+            --ha-field-border-radius,
+            var(--ha-border-radius-sm)
+          );
+          box-shadow: inset 0 0 0 1px var(--ha-field-border-color, transparent);
+          transition: box-shadow 180ms ease-in-out;
           cursor: pointer;
           --ha-ripple-color: var(--primary-text-color);
         }
@@ -210,7 +213,10 @@ export class HaPickerField extends PickerMixin(LitElement) {
           right: 0;
           height: 1px;
           width: 100%;
-          background-color: var(--ha-color-border-neutral-loud);
+          background-color: var(
+            --ha-field-underline-color,
+            var(--ha-color-border-neutral-loud)
+          );
           transform:
             height 180ms ease-in-out,
             background-color 180ms ease-in-out;
@@ -218,7 +224,15 @@ export class HaPickerField extends PickerMixin(LitElement) {
 
         .field:focus-within:after {
           height: 2px;
-          background-color: var(--mdc-theme-primary);
+          background-color: var(
+            --ha-field-focus-underline-color,
+            var(--mdc-theme-primary)
+          );
+        }
+
+        .field:focus-within {
+          box-shadow: inset 0 0 0 1px
+            var(--ha-field-focus-border-color, var(--primary-color));
         }
 
         :host([unknown]) .field {

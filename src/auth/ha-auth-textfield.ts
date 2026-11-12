@@ -139,8 +139,8 @@ const styles = css`
     height: 56px;
     padding: 0 var(--ha-space-4);
     background-color: var(--ha-color-form-background);
-    border-radius: var(--ha-border-radius-sm) var(--ha-border-radius-sm)
-      var(--ha-border-radius-square) var(--ha-border-radius-square);
+    border-radius: var(--ha-field-border-radius, var(--ha-border-radius-sm));
+    box-shadow: inset 0 0 0 1px var(--ha-field-border-color, transparent);
     cursor: text;
     transition: background-color var(--wa-transition-normal) ease-in-out;
   }
@@ -159,14 +159,24 @@ const styles = css`
     left: 0;
     right: 0;
     height: 1px;
-    background-color: var(--ha-color-border-neutral-loud);
+    background-color: var(
+      --ha-field-underline-color,
+      var(--ha-color-border-neutral-loud)
+    );
     transition:
       height var(--wa-transition-normal) ease-in-out,
       background-color var(--wa-transition-normal) ease-in-out;
   }
+  ha-auth-textfield .base:focus-within {
+    box-shadow: inset 0 0 0 1px
+      var(--ha-field-focus-border-color, var(--primary-color));
+  }
   ha-auth-textfield .base:focus-within::after {
     height: 2px;
-    background-color: var(--primary-color);
+    background-color: var(
+      --ha-field-focus-underline-color,
+      var(--primary-color)
+    );
   }
   ha-auth-textfield .base.invalid:not(.disabled)::after {
     background-color: var(--ha-color-border-danger-normal);

@@ -19,6 +19,13 @@ export const coreStyles = css`
     --ha-border-radius-pill: 9999px;
     --ha-border-radius-circle: 50%;
     --ha-border-radius-square: 0;
+    --ha-card-border-radius: 18px;
+    --ha-tile-border-radius: 18px;
+    --ha-control-border-radius: 14px;
+    --ha-field-border-radius: 14px;
+    --ha-dialog-border-radius: 28px;
+    --button-height: 44px;
+    --ha-area-card-border-radius: var(--ha-border-radius-3xl);
     --ha-picture-border-radius: var(--ha-border-radius-lg);
     --ha-picture-border-radius-sm: var(--ha-border-radius-sm);
 

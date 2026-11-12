@@ -58,12 +58,23 @@ class PanelHome extends SubscribeMixin(LitElement) {
 
   @query(".banner") private _banner?: HTMLElement;
 
+  private _observedBanner?: HTMLElement;
+
   private _loadConfigPromise?: Promise<void>;
 
   private _securityConfigRevision = 0;
 
   public hassSubscribe() {
     return [
+      subscribeFrontendSystemData(this.hass.connection, "home", ({ value }) => {
+        if (!this._config || deepEqual(value || {}, this._config)) {
+          return;
+        }
+        this._config = value || {};
+        if (this.hasUpdated) {
+          this._setLovelace();
+        }
+      }),
       subscribeFrontendSystemData(
         this.hass.connection,
         "security",
@@ -372,10 +383,17 @@ class PanelHome extends SubscribeMixin(LitElement) {
 
   protected updated(changedProps: PropertyValues) {
     super.updated(changedProps);
-    if (changedProps.has("_showBanner") || changedProps.has("_lovelace")) {
+    if (this._banner !== this._observedBanner) {
+      if (this._observedBanner) {
+        this._bannerHeight.unobserve(this._observedBanner);
+      }
       if (this._banner) {
         this._bannerHeight.observe(this._banner);
+      } else {
+        this._bannerHeight.value = undefined;
+        this.requestUpdate();
       }
+      this._observedBanner = this._banner;
     }
   }
 
@@ -401,6 +419,8 @@ class PanelHome extends SubscribeMixin(LitElement) {
         type: "home",
         alert_entities: this._securityConfig.alert_entities,
         favorite_entities: this._config?.favorite_entities,
+        dock_items: this._config?.dock_items,
+        home_picture: this._config?.home_picture,
         home_panel: true,
         hide_welcome_message: this._config?.hide_welcome_message,
         hide_suggested_entities: this._config?.hide_suggested_entities,

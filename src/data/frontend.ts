@@ -33,6 +33,8 @@ export interface CoreFrontendSystemData {
 
 export interface HomeFrontendSystemData {
   favorite_entities?: string[];
+  dock_items?: string[];
+  home_picture?: string;
   welcome_banner_dismissed?: boolean;
   hide_welcome_message?: boolean;
   hide_suggested_entities?: boolean;

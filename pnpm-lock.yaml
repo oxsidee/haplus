@@ -222,6 +222,9 @@ importers:
       '@egjs/hammerjs':
         specifier: 2.0.17
         version: 2.0.17
+      '@fontsource-variable/inter-tight':
+        specifier: 5.2.6
+        version: 5.2.6
       '@formatjs/intl-datetimeformat':
         specifier: 7.8.2
         version: 7.8.2
@@ -1928,6 +1931,9 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
+
+  '@fontsource-variable/inter-tight@5.2.6':
+    resolution: {integrity: sha512-umb36PJO+bwzqvpKkikmIEDs0YF3P5vUBQe+UEBgPSDffzDZyKVIU07M4/1cWcsZgU1PaXjyheUYKwlsJteopA==}
 
   '@formatjs/bigdecimal@0.2.7':
     resolution: {integrity: sha512-B4+XY/e4u5v261r3a37Kq2ax91gPZSKGyVpx8X5dygAggLlUz+6MeBpmAhaBFGB8WQ4JB1qD+QtKHk9aJkEb9Q==}
@@ -9368,6 +9374,8 @@ snapshots:
       '@floating-ui/utils': 0.2.12
 
   '@floating-ui/utils@0.2.12': {}
+
+  '@fontsource-variable/inter-tight@5.2.6': {}
 
   '@formatjs/bigdecimal@0.2.7': {}
 

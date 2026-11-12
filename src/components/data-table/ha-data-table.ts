@@ -1651,7 +1651,7 @@ export class HaDataTable extends LitElement {
         }
 
         .mdc-data-table__header-cell {
-          color: var(--primary-text-color);
+          color: var(--secondary-text-color);
         }
 
         .mdc-data-table__cell {
@@ -1910,9 +1910,9 @@ export class HaDataTable extends LitElement {
           font-size: var(--ha-font-size-s);
           line-height: var(--ha-line-height-normal);
           font-weight: var(--ha-font-weight-medium);
-          letter-spacing: 0.0071428571em;
+          letter-spacing: 0.14em;
           text-decoration: inherit;
-          text-transform: inherit;
+          text-transform: uppercase;
           text-align: var(--float-start);
         }
 

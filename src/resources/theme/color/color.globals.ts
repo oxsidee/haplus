@@ -8,51 +8,51 @@ export const colorStyles = css`
     --primary-text-color: var(--ha-color-text-primary);
     --secondary-text-color: var(--ha-color-text-secondary);
     --text-primary-color: #ffffff;
-    --text-light-primary-color: #212121;
-    --disabled-text-color: #bdbdbd;
+    --text-light-primary-color: #141517;
+    --disabled-text-color: #a0a6ae;
 
     /* main interface colors */
-    --primary-color: var(--ha-color-primary-40);
-    --dark-primary-color: #0288d1;
-    --darker-primary-color: #016194;
-    --light-primary-color: #b3e5fc;
-    --accent-color: #ff9800;
-    --divider-color: rgba(0, 0, 0, 0.12);
-    --outline-color: rgba(0, 0, 0, 0.12);
-    --outline-hover-color: rgba(0, 0, 0, 0.24);
-    --shadow-color: rgba(0, 0, 0, 0.16);
+    --primary-color: var(--ha-color-primary-10);
+    --dark-primary-color: #0b0c0e;
+    --darker-primary-color: #000000;
+    --light-primary-color: #e6e4df;
+    --accent-color: #d98a1c;
+    --divider-color: rgba(20, 21, 23, 0.08);
+    --outline-color: rgba(20, 21, 23, 0.09);
+    --outline-hover-color: rgba(20, 21, 23, 0.18);
+    --shadow-color: rgba(20, 21, 23, 0.08);
 
     /* rgb */
-    --rgb-primary-color: 0, 154, 199;
-    --rgb-accent-color: 255, 152, 0;
-    --rgb-primary-text-color: 33, 33, 33;
-    --rgb-secondary-text-color: 114, 114, 114;
+    --rgb-primary-color: 20, 21, 23;
+    --rgb-accent-color: 217, 138, 28;
+    --rgb-primary-text-color: 20, 21, 23;
+    --rgb-secondary-text-color: 94, 99, 106;
     --rgb-text-primary-color: 255, 255, 255;
     --rgb-card-background-color: 255, 255, 255;
 
-    --rgb-warning-color: 255, 166, 0;
-    --rgb-error-color: 219, 68, 55;
-    --rgb-success-color: 67, 160, 71;
-    --rgb-info-color: 3, 155, 229;
+    --rgb-warning-color: 201, 134, 26;
+    --rgb-error-color: 217, 71, 58;
+    --rgb-success-color: 46, 158, 94;
+    --rgb-info-color: 46, 127, 208;
 
-    --scrollbar-thumb-color: rgb(194, 194, 194);
+    --scrollbar-thumb-color: rgba(20, 21, 23, 0.18);
 
-    --error-color: #db4437;
-    --warning-color: #ffa600;
-    --success-color: #43a047;
-    --info-color: #039be5;
+    --error-color: #d9473a;
+    --warning-color: #c9861a;
+    --success-color: #2e9e5e;
+    --info-color: #2e7fd0;
 
     /* backgrounds */
     --card-background-color: #ffffff;
-    --primary-background-color: #fafafa;
-    --secondary-background-color: #e5e5e5;
+    --primary-background-color: #f3f2ef;
+    --secondary-background-color: #eceae5;
     --clear-background-color: #ffffff;
 
     /* for label-badge */
     --label-badge-grey: #9e9e9e;
 
     /* states icon */
-    --state-icon-color: #44739e;
+    --state-icon-color: #5e636a;
     /* an error state is anything that would be considered an error */
     /* --state-icon-error-color: #db4437; derived from error-color */
 
@@ -67,28 +67,28 @@ export const colorStyles = css`
     --energy-water-color: #00bcd4;
 
     /* color */
-    --disabled-color: #bdbdbd;
-    --red-color: #f44336;
-    --pink-color: #e91e63;
-    --purple-color: #926bc7;
-    --deep-purple-color: #6e41ab;
-    --indigo-color: #3f51b5;
-    --blue-color: #2196f3;
-    --light-blue-color: #03a9f4;
-    --cyan-color: #00bcd4;
-    --teal-color: #009688;
-    --green-color: #4caf50;
-    --light-green-color: #8bc34a;
-    --lime-color: #cddc39;
-    --yellow-color: #ffeb3b;
-    --amber-color: #ffc107;
-    --orange-color: #ff9800;
-    --deep-orange-color: #ff6f22;
+    --disabled-color: #c9cdd3;
+    --red-color: #d9473a;
+    --pink-color: #d6457f;
+    --purple-color: #7a5ad9;
+    --deep-purple-color: #5b45b8;
+    --indigo-color: #4a62d9;
+    --blue-color: #2e7fd0;
+    --light-blue-color: #4a62d9;
+    --cyan-color: #1e98a8;
+    --teal-color: #1f8f80;
+    --green-color: #2e9e5e;
+    --light-green-color: #6a9e2e;
+    --lime-color: #9aa51e;
+    --yellow-color: #b88a0e;
+    --amber-color: #d98a1c;
+    --orange-color: #c9861a;
+    --deep-orange-color: #e06a24;
     --brown-color: #795548;
-    --light-grey-color: #bdbdbd;
-    --grey-color: #9e9e9e;
-    --dark-grey-color: #606060;
-    --blue-grey-color: #607d8b;
+    --light-grey-color: #c9cdd3;
+    --grey-color: #7d838b;
+    --dark-grey-color: #5e636a;
+    --blue-grey-color: #6b7a88;
     --black-color: #000000;
     --white-color: #ffffff;
 
@@ -152,14 +152,14 @@ export const colorStyles = css`
     --history-unavailable-color: transparent;
 
     /* input components */
-    --input-idle-line-color: rgba(0, 0, 0, 0.42);
+    --input-idle-line-color: rgba(20, 21, 23, 0.24);
     --input-hover-line-color: rgba(0, 0, 0, 0.87);
     --input-disabled-line-color: rgba(0, 0, 0, 0.06);
-    --input-outlined-idle-border-color: rgba(0, 0, 0, 0.38);
-    --input-outlined-hover-border-color: rgba(0, 0, 0, 0.87);
+    --input-outlined-idle-border-color: rgba(20, 21, 23, 0.16);
+    --input-outlined-hover-border-color: rgba(20, 21, 23, 0.4);
     --input-outlined-disabled-border-color: rgba(0, 0, 0, 0.06);
-    --input-fill-color: rgb(245, 245, 245);
-    --input-disabled-fill-color: rgb(250, 250, 250);
+    --input-fill-color: rgba(20, 21, 23, 0.04);
+    --input-disabled-fill-color: rgba(20, 21, 23, 0.02);
     --input-ink-color: rgba(0, 0, 0, 0.87);
     --input-label-ink-color: rgba(0, 0, 0, 0.6);
     --input-disabled-ink-color: rgba(0, 0, 0, 0.37);
@@ -264,10 +264,12 @@ export const colorStyles = css`
 
     --state-icon-error-color: var(--error-state-color, var(--error-color));
     --sidebar-text-color: var(--primary-text-color);
-    --sidebar-background-color: var(--card-background-color);
-    --sidebar-selected-text-color: var(--primary-color);
-    --sidebar-selected-icon-color: var(--primary-color);
-    --sidebar-icon-color: rgba(var(--rgb-primary-text-color), 0.6);
+    --sidebar-background-color: #f8f7f5;
+    --sidebar-selected-text-color: var(--primary-text-color);
+    --sidebar-selected-background-color: var(--primary-text-color);
+    --sidebar-selected-background-opacity: 0.07;
+    --sidebar-selected-icon-color: var(--primary-text-color);
+    --sidebar-icon-color: rgba(var(--rgb-primary-text-color), 0.62);
     --slider-color: var(--primary-color);
     --slider-secondary-color: var(--light-primary-color);
     --slider-track-color: var(--scrollbar-thumb-color);
@@ -278,7 +280,7 @@ export const colorStyles = css`
     --table-row-alternative-background-color: var(--secondary-background-color);
     --data-table-background-color: var(--card-background-color);
     --markdown-code-background-color: var(--primary-background-color);
-    --bar-box-shadow: 0 2px 12px var(--shadow-color);
+    --bar-box-shadow: 0 1px 2px rgba(20, 21, 23, 0.04), 0 8px 24px rgba(20, 21, 23, 0.06);
 
     /* https://github.com/material-components/material-web/blob/master/docs/theming.md */
     --mdc-theme-primary: var(--primary-color);
@@ -295,8 +297,10 @@ export const colorStyles = css`
     --mdc-theme-text-icon-on-background: var(--secondary-text-color);
     --mdc-theme-error: var(--error-color);
     --app-header-text-color: var(--sidebar-text-color);
-    --app-header-background-color: var(--sidebar-background-color);
-    --app-header-border-bottom: 1px solid var(--divider-color);
+    --app-header-background-color: var(--primary-background-color);
+    --app-header-border-bottom: none;
+    --app-header-edit-background-color: #141517;
+    --app-header-edit-text-color: #f2f3f5;
     --app-theme-color: var(--app-header-background-color);
     --mdc-checkbox-unchecked-color: rgba(var(--rgb-primary-text-color), 0.54);
     --mdc-checkbox-disabled-color: var(--disabled-text-color);
@@ -332,38 +336,108 @@ export const colorStyles = css`
     --mdc-select-disabled-ink-color: var(--input-disabled-ink-color);
     --mdc-select-dropdown-icon-color: var(--input-dropdown-icon-color);
     --mdc-select-disabled-dropdown-icon-color: var(--input-disabled-ink-color);
-    --ha-assist-chip-filled-container-color: rgba(var(--rgb-primary-text-color), 0.15);
+    --ha-assist-chip-filled-container-color: rgba(var(--rgb-primary-text-color), 0.06);
     --ha-assist-chip-active-container-color: rgba(var(--rgb-primary-color), 0.15);
-    --chip-background-color: rgba(var(--rgb-primary-text-color), 0.15);
+    --chip-background-color: rgba(var(--rgb-primary-text-color), 0.06);
+
+    /* redesign: fields and switches */
+    --ha-field-border-color: rgba(var(--rgb-primary-text-color), 0.08);
+    --ha-field-focus-border-color: rgba(var(--rgb-primary-text-color), 0.5);
+    --ha-field-underline-color: transparent;
+    --ha-field-focus-underline-color: transparent;
+    --ha-switch-size: 26px;
+    --ha-switch-width: 42px;
+    --ha-switch-thumb-size: 20px;
+    --ha-switch-background-color: rgba(var(--rgb-primary-text-color), 0.16);
+    --ha-switch-background-color-hover: rgba(var(--rgb-primary-text-color), 0.22);
+    --ha-switch-border-color: transparent;
+    --ha-switch-checked-background-color: var(--accent-color);
+    --ha-switch-checked-background-color-hover: var(--accent-color);
+    --ha-switch-checked-border-color: transparent;
+    --ha-switch-thumb-background-color: #ffffff;
+    --ha-switch-thumb-border-color: #ffffff;
+    --ha-switch-checked-thumb-background-color: #ffffff;
+    --ha-switch-checked-thumb-border-color: #ffffff;
+    --ha-switch-thumb-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
 `;
 
 export const darkColorStyles = css`
   html {
-    --primary-background-color: #111111;
-    --card-background-color: #1c1c1c;
-    --secondary-background-color: #282828;
-    --clear-background-color: #111111;
-    --primary-text-color: #e1e1e1;
-    --secondary-text-color: #9b9b9b;
-    --disabled-text-color: #6f6f6f;
-    --divider-color: rgba(225, 225, 225, 0.12);
-    --outline-color: rgba(225, 225, 225, 0.12);
-    --outline-hover-color: rgba(225, 225, 225, 0.24);
-    --shadow-color: rgba(0, 0, 0, 0.48);
+    --primary-background-color: #0b0c0e;
+    --card-background-color: #16181c;
+    --secondary-background-color: #202328;
+    --clear-background-color: #0b0c0e;
+    --primary-text-color: #f2f3f5;
+    --secondary-text-color: #a0a6ae;
+    --disabled-text-color: #7d838b;
+    --divider-color: rgba(255, 255, 255, 0.07);
+    --outline-color: rgba(255, 255, 255, 0.08);
+    --outline-hover-color: rgba(255, 255, 255, 0.16);
+    --shadow-color: rgba(0, 0, 0, 0.5);
 
-    --scrollbar-thumb-color: rgb(110, 110, 110);
+    --primary-color: #f2f3f5;
+    --dark-primary-color: #ffffff;
+    --darker-primary-color: #ffffff;
+    --light-primary-color: #3b3f45;
+    --text-primary-color: #0b0c0e;
+    --text-light-primary-color: #f2f3f5;
+    --accent-color: #f2b45a;
+    --rgb-primary-color: 242, 243, 245;
+    --rgb-accent-color: 242, 180, 90;
+    --rgb-primary-text-color: 242, 243, 245;
+    --rgb-secondary-text-color: 160, 166, 174;
+    --rgb-text-primary-color: 11, 12, 14;
+    --rgb-card-background-color: 22, 24, 28;
+    --rgb-warning-color: 242, 180, 90;
+    --rgb-error-color: 242, 107, 94;
+    --rgb-success-color: 108, 203, 149;
+    --rgb-info-color: 111, 179, 242;
+    --error-color: #f26b5e;
+    --warning-color: #f2b45a;
+    --success-color: #6ccb95;
+    --info-color: #6fb3f2;
+    --state-icon-color: #a0a6ae;
+
+    --red-color: #f26b5e;
+    --pink-color: #f27ba8;
+    --purple-color: #a68bf0;
+    --deep-purple-color: #8a72e0;
+    --indigo-color: #8ea2f7;
+    --blue-color: #6fb3f2;
+    --light-blue-color: #8ea2f7;
+    --cyan-color: #5cc8d6;
+    --teal-color: #4fbfae;
+    --green-color: #6ccb95;
+    --light-green-color: #a6d46a;
+    --lime-color: #cfd66a;
+    --yellow-color: #f2c94c;
+    --amber-color: #f2b45a;
+    --orange-color: #f2a35a;
+    --deep-orange-color: #f08a4b;
+    --grey-color: #7d838b;
+    --light-grey-color: #c9cdd3;
+    --dark-grey-color: #5e636a;
+    --blue-grey-color: #8a9aa8;
+
+    --sidebar-background-color: #0f1114;
+    --app-header-edit-background-color: #202328;
+    --chip-background-color: rgba(255, 255, 255, 0.06);
+    --ha-assist-chip-filled-container-color: rgba(255, 255, 255, 0.06);
+    --bar-box-shadow: none;
+
+    --scrollbar-thumb-color: rgba(255, 255, 255, 0.16);
 
     --mdc-ripple-color: #aaaaaa;
     --mdc-linear-progress-buffer-color: rgba(255, 255, 255, 0.1);
 
-    --input-idle-line-color: rgba(255, 255, 255, 0.42);
+    --input-idle-line-color: rgba(255, 255, 255, 0.2);
     --input-hover-line-color: rgba(255, 255, 255, 0.87);
     --input-disabled-line-color: rgba(255, 255, 255, 0.06);
-    --input-outlined-idle-border-color: rgba(255, 255, 255, 0.38);
+    --input-outlined-idle-border-color: rgba(255, 255, 255, 0.12);
     --input-outlined-hover-border-color: rgba(255, 255, 255, 0.87);
     --input-outlined-disabled-border-color: rgba(255, 255, 255, 0.06);
-    --input-fill-color: rgba(255, 255, 255, 0.05);
+    --input-fill-color: rgba(255, 255, 255, 0.04);
     --input-disabled-fill-color: rgba(255, 255, 255, 0.02);
     --input-ink-color: rgba(255, 255, 255, 0.87);
     --input-label-ink-color: rgba(255, 255, 255, 0.6);
@@ -390,14 +464,12 @@ export const darkColorStyles = css`
     --codemirror-type: #decb6b;
     --energy-grid-return-color: #a280db;
     --map-filter: invert(0.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(0.3);
-    --disabled-color: #464646;
+    --disabled-color: #2e3238;
 
     --ha-button-primary-light-color: #4082a040;
     --ha-button-warning-light-color: #917b54c1;
     --ha-button-neutral-color: #d9dae0;
     --ha-button-neutral-light-color: #6a7081;
-
-    --bar-box-shadow: 0 2px 12px var(--shadow-color);
   }
 `;
 

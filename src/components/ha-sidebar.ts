@@ -776,8 +776,8 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
         ha-list-item-button {
           flex-shrink: 0;
           margin: 0 var(--ha-space-1) var(--ha-space-1);
-          border-radius: var(--ha-border-radius-sm);
-          --ha-row-item-min-height: var(--ha-space-10);
+          border-radius: var(--ha-border-radius-xl);
+          --ha-row-item-min-height: var(--ha-space-11);
           --ha-row-item-padding-block: 0;
           --ha-row-item-padding-inline: var(--ha-space-3);
           width: var(--ha-space-12);
@@ -798,7 +798,7 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
           color: var(--sidebar-selected-icon-color);
         }
         ha-list-item-button.selected::before {
-          border-radius: var(--ha-border-radius-sm);
+          border-radius: var(--ha-border-radius-xl);
           position: absolute;
           top: 0;
           right: 0;
@@ -808,8 +808,14 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
           content: "";
           transition: opacity 15ms linear;
           will-change: opacity;
-          background-color: var(--sidebar-selected-icon-color);
-          opacity: var(--dark-divider-opacity);
+          background-color: var(
+            --sidebar-selected-background-color,
+            var(--sidebar-selected-icon-color)
+          );
+          opacity: var(
+            --sidebar-selected-background-opacity,
+            var(--dark-divider-opacity)
+          );
         }
 
         ha-icon[slot="start"],
