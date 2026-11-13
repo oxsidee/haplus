@@ -1,0 +1,8 @@
+.git
+node_modules
+build
+hass_frontend
+translations
+config
+.husky/_
+**/.DS_Store

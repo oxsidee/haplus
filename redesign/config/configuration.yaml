@@ -1,0 +1,8 @@
+default_config:
+
+homeassistant:
+  time_zone: Europe/Moscow
+  country: RU
+  language: ru
+  unit_system: metric
+  currency: RUB

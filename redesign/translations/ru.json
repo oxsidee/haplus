@@ -1,0 +1,182 @@
+{
+  "ui": {
+    "panel": {
+      "lovelace": {
+        "cards": {
+          "home_scene": {
+            "greeting": {
+              "morning": "Доброе утро",
+              "afternoon": "Добрый день",
+              "evening": "Добрый вечер",
+              "night": "Доброй ночи"
+            },
+            "people_home": "Дома {count, plural, one {# человек} few {# человека} many {# человек} other {# человека}}",
+            "nobody_home": "Никого нет дома",
+            "alarm_armed": "охрана включена",
+            "alarm_disarmed": "охрана снята",
+            "doors_locked": "двери закрыты",
+            "entity_unlocked": "{name}: открыт",
+            "locks_unlocked": "открыто замков: {count}",
+            "entity_open": "{name}: открыто",
+            "openings_open": "открыто окон и дверей: {count}",
+            "favorites": "Избранное",
+            "areas": "Зоны",
+            "all_devices": "Все устройства",
+            "on_count": "{count} вкл.",
+            "off": "Выкл",
+            "on": "Вкл",
+            "lights": "Свет",
+            "inside": "Внутри",
+            "inside_heating": "Внутри · обогрев",
+            "inside_cooling": "Внутри · охлаждение",
+            "outside": "Снаружи",
+            "power": "Потребление",
+            "security": "Охрана",
+            "climate": "Климат",
+            "lock": "Замок",
+            "locked": "закрыт",
+            "unlocked": "открыт",
+            "covers": "Шторы",
+            "closed": "закрыты",
+            "open": "открыты",
+            "other_areas": "Другие зоны",
+            "no_areas": "Зон пока нет",
+            "lit_in": "свет в {lit} из {total}",
+            "lights_off": "свет выключен",
+            "light_pct": "Свет {value} %",
+            "light_on": "Свет включён",
+            "toggle_area_lights": "Свет: {area}",
+            "light_label": "Свет",
+            "off_label": "Выкл",
+            "scenes": "Сцены",
+            "battery": "Батарея {value}",
+            "updates_available": "Доступны обновления",
+            "updates_count": "Обновлений: {count}",
+            "repairs": "Требуется исправление",
+            "repairs_count": "Проблем: {count}",
+            "attention": "Требует внимания",
+            "unknown_area": "Неизвестная зона",
+            "humidity": "влажность {value} %",
+            "lights_of": "{on} из {total} вкл.",
+            "devices": "Устройства",
+            "whole_area": "Вся зона",
+            "media": "Медиа",
+            "other_devices": "Прочее",
+            "sensors": "Датчики",
+            "toggle_entity": "Переключить: {name}",
+            "brightness": "Яркость",
+            "brightness_value": "Яркость {value} %",
+            "color_temperature": "Цветовая температура",
+            "turn_off": "Выключить",
+            "turn_on": "Включить",
+            "more_settings": "Другие настройки",
+            "decrease": "Понизить температуру",
+            "increase": "Повысить температуру",
+            "target": "Цель",
+            "now_value": "сейчас {value}",
+            "mode": "Режим",
+            "open_action": "Открыть",
+            "close_action": "Закрыть",
+            "position": "Положение",
+            "previous": "Назад",
+            "play_pause": "Пуск или пауза",
+            "next": "Вперёд",
+            "volume_down": "Тише",
+            "volume_up": "Громче",
+            "all_lights": "Весь свет",
+            "scene": "Сцена",
+            "area_actions": "Действия зоны",
+            "devices_count": "{count, plural, one {# устройство} few {# устройства} many {# устройств} other {# устройства}}",
+            "edit_dock": "Настроить кнопки",
+            "add_area": "Зона",
+            "playing_count": "играет: {count}",
+            "dock_groups": {
+              "lights": "Свет",
+              "climate": "Климат",
+              "locks": "Замки",
+              "covers": "Шторы",
+              "gates": "Ворота",
+              "security": "Охрана",
+              "media": "Медиа"
+            },
+            "dock_editor": {
+              "title": "Кнопки под домом",
+              "description": "Любое устройство, сцена или скрипт либо готовая группа",
+              "empty": "Кнопок пока нет",
+              "add_entity": "Добавить устройство или объект",
+              "add_group": "Готовые группы",
+              "group": "Группа",
+              "missing": "Не найдено"
+            },
+            "edit_picture": "Сменить изображение дома",
+            "picture_editor": {
+              "title": "Изображение дома",
+              "description": "Показывается вместо иллюстрации"
+            },
+            "done": "Готово",
+            "edit_areas": "Изменить",
+            "drag": "Перетащите, чтобы изменить порядок",
+            "edit_floor": "Изменить этаж",
+            "delete_floor": "Удалить этаж",
+            "add_floor": "Этаж",
+            "edit_area": "Изменить зону",
+            "delete_area": "Удалить зону",
+            "drop_here": "Перетащите зоны сюда",
+            "switches": "Выключатели",
+            "panel_editor": {
+              "edit": "Изменить устройства",
+              "add_device": "Устройство",
+              "add_group": "Группа",
+              "new_group": "Новая группа",
+              "group_name": "Название",
+              "rename_group": "Переименовать группу",
+              "delete_group": "Удалить группу",
+              "delete_group_text": "Устройства группы будут скрыты из панели.",
+              "remove_device": "Убрать из панели",
+              "empty_group": "Перетащите устройства сюда",
+              "reset": "Сбросить",
+              "reset_text": "Вернуть группы устройств по умолчанию?"
+            },
+            "temperature_short": "Температура",
+            "color": "Цвет",
+            "white": "Белый"
+          },
+          "energy_heading": {
+            "period": "Период",
+            "day": "День",
+            "week": "Неделя",
+            "month": "Месяц",
+            "year": "Год"
+          }
+        }
+      },
+      "config": {
+        "dashboard": {
+          "redesign": {
+            "updates_title": "Доступны обновления"
+          }
+        }
+      },
+      "media-browser": {
+        "redesign": {
+          "sources": "Источники",
+          "players": "Плееры",
+          "playing_count": "Играет: {count}",
+          "nothing_playing": "Ничего не воспроизводится",
+          "shuffle": "Перемешать",
+          "repeat": "Повтор",
+          "previous": "Назад",
+          "next": "Вперёд",
+          "play_pause": "Пуск или пауза",
+          "volume_down": "Тише",
+          "volume_up": "Громче",
+          "turn_on": "Включить"
+        }
+      }
+    },
+    "sidebar": {
+      "role_admin": "Администратор",
+      "role_user": "Пользователь"
+    }
+  }
+}
