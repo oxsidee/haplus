@@ -74,16 +74,14 @@ export const fullCalendarStyles = [
     /* Sticky with an automatic height, so the header color needs an opaque
        background below it */
     .ha-fc-table-header {
-      background: linear-gradient(
-          var(--table-header-background-color),
-          var(--table-header-background-color)
-        )
-        var(--fc-classic-background);
+      background: var(--fc-classic-background);
     }
 
     .ha-fc-day-header-inner {
-      font-size: var(--ha-font-size-xs);
-      font-weight: var(--ha-font-weight-bold);
+      font-size: 12px;
+      font-weight: var(--ha-font-weight-medium);
+      letter-spacing: 0.16em;
+      color: var(--secondary-text-color);
       text-transform: uppercase;
     }
 

@@ -9,6 +9,7 @@ import type { LovelaceStrategyConfig } from "../../../data/lovelace/config/strat
 export interface EnergyViewStrategyConfig extends LovelaceStrategyConfig {
   collection_key?: string;
   hidden_cards?: string[];
+  single_view?: boolean;
 }
 
 export type EnergyViewPath =

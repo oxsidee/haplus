@@ -4,7 +4,10 @@ import type { MapStyleConfig } from "../../../common/map/map-styles";
 import type { HaDurationData } from "../../../components/ha-duration-input";
 import type { MapCardMarkerLabelMode } from "../../../components/map/ha-map";
 import type { EnergySourceByType } from "../../../data/energy";
-import type { SecurityAlertEntityConfig } from "../../../data/frontend";
+import type {
+  AreaPanelConfig,
+  SecurityAlertEntityConfig,
+} from "../../../data/frontend";
 import type { ActionConfig } from "../../../data/lovelace/config/action";
 import type { LovelaceCardConfig } from "../../../data/lovelace/config/card";
 import type {
@@ -173,6 +176,12 @@ export interface ButtonCardConfig extends LovelaceCardConfig {
   state_color?: boolean;
   show_state?: boolean;
   color?: string;
+}
+
+export interface EnergyHeadingCardConfig extends LovelaceCardConfig {
+  type: "energy-heading";
+  collection_key?: string;
+  show_menu?: boolean;
 }
 
 export interface EnergyCardBaseConfig extends LovelaceCardConfig {
@@ -718,6 +727,7 @@ export interface HomeSceneCardConfig extends LovelaceCardConfig {
 export interface AreaSceneCardConfig extends LovelaceCardConfig {
   type: "area-scene";
   area: string;
+  panel?: AreaPanelConfig;
 }
 
 export interface TileCardConfig extends LovelaceCardConfig, TileActionsConfig {

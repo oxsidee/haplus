@@ -232,10 +232,16 @@ export class HAFullCalendar extends LitElement {
                 ${
                   !this.narrow
                     ? html`
+                        <div class="heading-text">
+                          <span class="overline"
+                            >${this._i18n.localize("panel.calendar")}</span
+                          >
+                          <h1>${this.calendar.view.title}</h1>
+                        </div>
                         <div class="navigation">
                           <ha-button
-                            appearance="filled"
-                            size="s"
+                            appearance="outlined"
+                            variant="neutral"
                             class="today"
                             @click=${this._handleToday}
                             >${this._i18n.localize(
@@ -254,9 +260,6 @@ export class HAFullCalendar extends LitElement {
                             @click=${this._handleNext}
                           >
                           </ha-icon-button-next>
-                        </div>
-                        <h1>${this.calendar.view.title}</h1>
-                        <div>
                           <ha-button-toggle-group
                             .buttons=${viewToggleButtons}
                             .active=${this._activeView}
@@ -700,9 +703,37 @@ export class HAFullCalendar extends LitElement {
 
         .header {
           display: flex;
-          align-items: center;
+          flex-wrap: wrap;
+          align-items: flex-end;
           justify-content: space-between;
-          padding-bottom: 8px;
+          gap: var(--ha-space-4);
+          padding-bottom: var(--ha-space-5);
+        }
+
+        .heading-text {
+          display: flex;
+          flex-direction: column;
+          gap: var(--ha-space-2);
+        }
+
+        .heading-text .overline {
+          font-size: 12px;
+          letter-spacing: var(--ha-letter-spacing-overline, 0.24em);
+          color: var(--secondary-text-color);
+          font-weight: var(--ha-font-weight-medium);
+          text-transform: uppercase;
+        }
+
+        .header h1 {
+          margin: 0;
+          font-size: clamp(36px, 4.6vw, 60px);
+          line-height: 1;
+          font-weight: var(--ha-font-weight-thin, 200);
+          letter-spacing: -0.035em;
+        }
+
+        .header h1::first-letter {
+          text-transform: uppercase;
         }
 
         :host([hide-header]) .header {
@@ -728,7 +759,9 @@ export class HAFullCalendar extends LitElement {
 
         .navigation {
           display: flex;
+          flex-wrap: wrap;
           align-items: center;
+          gap: var(--ha-space-2);
           flex-grow: 0;
         }
 
@@ -750,15 +783,14 @@ export class HAFullCalendar extends LitElement {
         }
 
         .today {
-          margin-right: 20px;
-          margin-inline-end: 20px;
-          margin-inline-start: initial;
           direction: var(--direction);
         }
 
         .prev,
         .next {
-          --ha-icon-button-size: 32px;
+          --ha-icon-button-size: 44px;
+          border-radius: var(--ha-border-radius-pill);
+          box-shadow: inset 0 0 0 1px var(--divider-color);
         }
 
         ha-button[slot="fab"] {
@@ -784,6 +816,7 @@ export class HAFullCalendar extends LitElement {
 
         #calendar {
           flex-grow: 1;
+          --calendar-border-radius: 24px;
           background-color: var(
             --ha-card-background,
             var(--card-background-color, white)

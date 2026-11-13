@@ -193,6 +193,7 @@ class PanelEnergy extends LitElement {
       css`
         :host {
           --ha-view-sections-column-max-width: 100%;
+          --ha-card-border-radius: 28px;
           user-select: none;
         }
         .centered {

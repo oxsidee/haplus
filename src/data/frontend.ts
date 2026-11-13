@@ -31,10 +31,22 @@ export interface CoreFrontendSystemData {
   };
 }
 
+export interface AreaPanelGroupConfig {
+  id: string;
+  name?: string;
+  entities: string[];
+}
+
+export interface AreaPanelConfig {
+  groups: AreaPanelGroupConfig[];
+  hidden?: string[];
+}
+
 export interface HomeFrontendSystemData {
   favorite_entities?: string[];
   dock_items?: string[];
   home_picture?: string;
+  area_panels?: Record<string, AreaPanelConfig>;
   welcome_banner_dismissed?: boolean;
   hide_welcome_message?: boolean;
   hide_suggested_entities?: boolean;

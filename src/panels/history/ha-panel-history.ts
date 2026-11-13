@@ -43,6 +43,8 @@ import {
 import "../../components/chart/ha-chart-zoom-slider";
 import "../../components/chart/state-history-charts";
 import type { StateHistoryCharts } from "../../components/chart/state-history-charts";
+import { formatRangeTitle } from "../../common/datetime/format_range_title";
+import "../../components/ha-page-heading";
 import "../../components/date-picker/ha-date-range-nav";
 import "../../components/ha-button";
 import "../../components/ha-card";
@@ -214,9 +216,6 @@ class HaPanelHistory extends LitElement {
         .narrow=${this.narrow}
         .backButton=${!!this._showBack}
       >
-        <h1 class="page-title" slot="title">
-          ${this.hass.localize("panel.history")}
-        </h1>
         <ha-dropdown slot="actionItems" @wa-select=${this._handleMenuAction}>
           <ha-icon-button
             slot="trigger"
@@ -287,7 +286,16 @@ class HaPanelHistory extends LitElement {
                 : nothing
             }
             <div class="content-column">
-              <div class="toolbar">
+              <ha-page-heading
+                class="page-heading"
+                .overline=${this.hass.localize("panel.history")}
+                .heading=${formatRangeTitle(
+                  this._startDate,
+                  this._endDate,
+                  this.hass.locale,
+                  this.hass.config
+                )}
+              >
                 ${
                   this._sourcesShown() && !this.narrow
                     ? nothing
@@ -308,7 +316,7 @@ class HaPanelHistory extends LitElement {
                   time-picker
                   @value-changed=${this._dateRangeChanged}
                 ></ha-date-range-nav>
-              </div>
+              </ha-page-heading>
               <div
                 class="results ha-scrollbar ${classMap({
                   "has-zoom-bar": showZoomBar,
@@ -1022,7 +1030,22 @@ class HaPanelHistory extends LitElement {
           flex: 1;
           min-width: 0;
           overflow: hidden auto;
-          padding: var(--ha-space-4);
+          padding: 0 clamp(16px, 3vw, 48px) var(--ha-space-6);
+        }
+
+        .results state-history-charts {
+          display: block;
+          box-sizing: border-box;
+          padding: var(--ha-space-6);
+          border-radius: 28px;
+          border: 1px solid var(--divider-color);
+          background: var(--card-background-color);
+          box-shadow: var(--ha-card-box-shadow, none);
+        }
+
+        .page-heading {
+          flex-shrink: 0;
+          padding: var(--ha-space-2) clamp(16px, 3vw, 48px) var(--ha-space-5);
         }
 
         /* Room to scroll the last chart out from under the zoom bar */

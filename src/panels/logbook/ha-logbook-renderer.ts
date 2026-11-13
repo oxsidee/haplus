@@ -245,10 +245,14 @@ class HaLogbookRenderer extends LitElement {
         }
 
         .date {
-          margin: var(--ha-space-2) 0 0;
-          padding: var(--ha-space-2)
-            var(--logbook-horizontal-padding, var(--ha-space-4)) 0;
-          font-weight: var(--ha-font-weight-medium);
+          margin: 0;
+          padding: var(--ha-space-5)
+            var(--logbook-horizontal-padding, var(--ha-space-4))
+            var(--ha-space-2);
+          font-size: 28px;
+          line-height: 1.1;
+          font-weight: var(--ha-font-weight-thin, 200);
+          letter-spacing: -0.02em;
         }
 
         .floating-date {
@@ -257,8 +261,10 @@ class HaLogbookRenderer extends LitElement {
           inset-inline: 0;
           z-index: 2;
           margin: 0;
-          padding-bottom: var(--ha-space-2);
-          background-color: var(--card-background-color);
+          background-color: var(
+            --logbook-date-background,
+            var(--card-background-color)
+          );
         }
 
         .no-entries {

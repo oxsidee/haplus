@@ -2848,7 +2848,9 @@
       "migrate_to_user_data": "This will change the sidebar on all the devices you are logged in to. To create a sidebar per device, you should use a different user for that device.",
       "default": "default",
       "reset_to_defaults": "Reset to defaults",
-      "reset_confirmation": "Are you sure you want to reset the sidebar to its default configuration? This will restore the original order and visibility of all panels."
+      "reset_confirmation": "Are you sure you want to reset the sidebar to its default configuration? This will restore the original order and visibility of all panels.",
+      "role_admin": "Administrator",
+      "role_user": "User"
     },
     "panel": {
       "app": {
@@ -3070,6 +3072,9 @@
           "lorawan": {
             "main": "LoRaWAN",
             "secondary": "Long-range wireless devices and connections"
+          },
+          "redesign": {
+            "updates_title": "Updates available"
           }
         },
         "common": {
@@ -10291,6 +10296,15 @@
             "area_actions": "Area actions",
             "devices_count": "{count, plural, one {# device} other {# devices}}",
             "edit_dock": "Edit buttons",
+            "done": "Done",
+            "edit_areas": "Edit",
+            "drag": "Drag to reorder",
+            "edit_floor": "Edit floor",
+            "delete_floor": "Delete floor",
+            "add_floor": "Floor",
+            "edit_area": "Edit area",
+            "delete_area": "Delete area",
+            "drop_here": "Drag areas here",
             "edit_picture": "Change home image",
             "picture_editor": {
               "title": "Home image",
@@ -10315,7 +10329,32 @@
               "add_group": "Ready-made groups",
               "group": "Group",
               "missing": "Not found"
-            }
+            },
+            "switches": "Switches",
+            "panel_editor": {
+              "edit": "Edit devices",
+              "add_device": "Device",
+              "add_group": "Group",
+              "new_group": "New group",
+              "group_name": "Name",
+              "rename_group": "Rename group",
+              "delete_group": "Delete group",
+              "delete_group_text": "Devices from this group will be hidden from the panel.",
+              "remove_device": "Remove from panel",
+              "empty_group": "Drag devices here",
+              "reset": "Reset",
+              "reset_text": "Restore default device groups for this area?"
+            },
+            "temperature_short": "Temperature",
+            "color": "Color",
+            "white": "White"
+          },
+          "energy_heading": {
+            "period": "Period",
+            "day": "Day",
+            "week": "Week",
+            "month": "Month",
+            "year": "Year"
           }
         },
         "unused_entities": {
@@ -12360,6 +12399,20 @@
       "media-browser": {
         "error": {
           "player_not_exist": "Media player {name} does not exist"
+        },
+        "redesign": {
+          "sources": "Sources",
+          "players": "Players",
+          "playing_count": "Playing: {count}",
+          "nothing_playing": "Nothing playing",
+          "shuffle": "Shuffle",
+          "repeat": "Repeat",
+          "previous": "Previous",
+          "next": "Next",
+          "play_pause": "Play or pause",
+          "volume_down": "Volume down",
+          "volume_up": "Volume up",
+          "turn_on": "Turn on"
         }
       },
       "map": {

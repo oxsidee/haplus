@@ -143,11 +143,15 @@ export class HaConfigDeviceDashboard extends LitElement {
   @query("hass-tabs-subpage-data-table", true)
   private _dataTable!: HaTabsSubpageDataTable;
 
-  private _tableSettings = new DataTableSettingsController(this, {
-    search: "devices-table-search",
-    sorting: "devices-table-sort",
-    grouping: "devices-table-grouping",
-  });
+  private _tableSettings = new DataTableSettingsController(
+    this,
+    {
+      search: "devices-table-search",
+      sorting: "devices-table-sort",
+      grouping: "devices-table-grouping",
+    },
+    { defaultGrouping: "area" }
+  );
 
   @state()
   private _filters: DataTableFilters = {};
@@ -558,19 +562,22 @@ export class HaConfigDeviceDashboard extends LitElement {
           !this.entries
             ? html`<ha-skeleton-icon></ha-skeleton-icon>`
             : device.domains.length
-              ? html`<img
-                  alt=""
-                  crossorigin="anonymous"
-                  referrerpolicy="no-referrer"
-                  src=${brandsUrl(
-                    {
-                      domain: device.domains[0],
-                      type: "icon",
-                      darkOptimized: this.hass.themes?.darkMode,
-                    },
-                    this.hass.auth.data.hassUrl
-                  )}
-                />`
+              ? html`<span
+                  style="width: 42px; height: 42px; flex: none; border-radius: 21px; background: color-mix(in srgb, var(--primary-text-color) 6%, transparent); display: flex; align-items: center; justify-content: center;"
+                  ><img
+                    alt=""
+                    style="width: 24px; height: 24px; object-fit: contain;"
+                    crossorigin="anonymous"
+                    referrerpolicy="no-referrer"
+                    src=${brandsUrl(
+                      {
+                        domain: device.domains[0],
+                        type: "icon",
+                        darkOptimized: this.hass.themes?.darkMode,
+                      },
+                      this.hass.auth.data.hassUrl
+                    )}
+                /></span>`
               : "",
       },
       name: {
@@ -583,6 +590,17 @@ export class HaConfigDeviceDashboard extends LitElement {
         flex: 2,
         minWidth: "150px",
         extraTemplate: (device) => html`
+          ${
+            device.integration || this.hass.devices[device.id]?.model
+              ? html`<div
+                  style="color: var(--secondary-text-color); font-size: 13px;"
+                >
+                  ${[device.integration, this.hass.devices[device.id]?.model]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </div>`
+              : nothing
+          }
           ${
             device.parent_device_name
               ? html`<div style="color: var(--secondary-text-color);">
@@ -606,7 +624,7 @@ export class HaConfigDeviceDashboard extends LitElement {
           }
         `,
       },
-      area: getAreaTableColumn(localize),
+      area: { ...getAreaTableColumn(localize), defaultHidden: true },
       floor: getFloorTableColumn(localize),
       integration: {
         title: localize("ui.panel.config.devices.data_table.integration"),
@@ -614,6 +632,7 @@ export class HaConfigDeviceDashboard extends LitElement {
         filterable: true,
         groupable: true,
         urlName: "integration",
+        defaultHidden: true,
         minWidth: "120px",
         template: (device) =>
           !this.entries
@@ -640,12 +659,14 @@ export class HaConfigDeviceDashboard extends LitElement {
         filterable: true,
         groupable: true,
         urlName: "manufacturer",
+        defaultHidden: true,
         minWidth: "120px",
       },
       model: {
         title: localize("ui.panel.config.devices.data_table.model"),
         sortable: true,
         filterable: true,
+        defaultHidden: true,
         minWidth: "120px",
       },
       firmware_version: {
@@ -864,6 +885,7 @@ export class HaConfigDeviceDashboard extends LitElement {
         clickable
         sync-url
         has-fab
+        card-rows
         class=${this.narrow ? "narrow" : ""}
       >
         <ha-integration-overflow-menu
@@ -1335,7 +1357,7 @@ ${rejected
           display: block;
         }
         hass-tabs-subpage-data-table {
-          --data-table-row-height: 60px;
+          --data-table-row-height: 72px;
         }
         hass-tabs-subpage-data-table.narrow {
           --data-table-row-height: 72px;

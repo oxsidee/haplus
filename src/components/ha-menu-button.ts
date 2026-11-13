@@ -71,7 +71,7 @@ class HaMenuButton extends LitElement {
     }
     const hasNotifications =
       this._hasNotifications &&
-      (this._narrow || this._ui.dockedSidebar === "always_hidden");
+      (this._narrow || this._ui.dockedSidebar !== "docked");
     return html`
       <ha-icon-button
         .label=${this._localize("ui.sidebar.sidebar_toggle")}
@@ -102,7 +102,7 @@ class HaMenuButton extends LitElement {
     const showButton =
       this._ui?.kioskMode === false &&
       this._config?.auth.external?.config.hasSidebar !== true &&
-      (this._narrow || this._ui.dockedSidebar === "always_hidden");
+      (this._narrow || this._ui.dockedSidebar !== "docked");
 
     this._show = showButton || this._alwaysVisible;
 

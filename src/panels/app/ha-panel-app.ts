@@ -123,7 +123,7 @@ class HaPanelApp extends LitElement {
     return html`
       ${
         !this._kioskMode &&
-        (this.narrow || this.hass.dockedSidebar === "always_hidden")
+        (this.narrow || this.hass.dockedSidebar !== "docked")
           ? html`
               <div class="header">
                 <ha-icon-button

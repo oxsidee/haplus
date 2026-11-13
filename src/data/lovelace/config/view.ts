@@ -67,6 +67,7 @@ export interface LovelaceBaseViewConfig {
   visible?: boolean | ShowViewConfig[];
   subview?: boolean;
   back_path?: string;
+  hide_header?: boolean;
   // Only used for section view, it should move to a section view config type when the views will have dedicated editor.
   max_columns?: number;
   dense_section_placement?: boolean;

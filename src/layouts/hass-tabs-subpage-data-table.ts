@@ -77,6 +77,9 @@ export class HaTabsSubpageDataTable extends KeyboardShortcutMixin(LitElement) {
 
   @property({ type: Boolean, reflect: true }) public narrow = false;
 
+  @property({ type: Boolean, reflect: true, attribute: "card-rows" })
+  public cardRows = false;
+
   @property({ type: Boolean, attribute: "main-page" }) public mainPage = false;
 
   @property({ attribute: false }) public initialCollapsedGroups: string[] = [];
@@ -613,6 +616,7 @@ export class HaTabsSubpageDataTable extends KeyboardShortcutMixin(LitElement) {
                 }
                 <ha-data-table
                   .narrow=${this.narrow}
+                  .cardRows=${this.cardRows}
                   .columns=${this.columns}
                   .data=${this.data}
                   .loading=${this.loading}
@@ -991,9 +995,38 @@ export class HaTabsSubpageDataTable extends KeyboardShortcutMixin(LitElement) {
           1px - var(--header-height, 0px) - var(
             --safe-area-inset-top,
             0px
-          ) - var(--safe-area-inset-bottom, 0px)
+          ) - var(--safe-area-inset-bottom, 0px) - var(
+            --ha-page-heading-height,
+            0px
+          )
       );
       display: block;
+    }
+    :host(:not([narrow])) ha-data-table {
+      box-sizing: border-box;
+      width: auto;
+      margin: 0 var(--ha-space-4) var(--ha-space-4);
+      height: calc(
+        100vh -
+          1px - var(--header-height, 0px) - var(
+            --safe-area-inset-top,
+            0px
+          ) - var(--safe-area-inset-bottom, 0px) - var(
+            --ha-page-heading-height,
+            0px
+          ) -
+          72px
+      );
+      border-radius: 24px;
+      border: 1px solid var(--divider-color);
+      overflow: hidden;
+      background: var(--card-background-color);
+    }
+    :host([card-rows]) ha-data-table {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      --data-table-background-color: transparent;
     }
     /* Last content row should keep the same padding above the fab as the fab
        has to the bottom (16px standard fab bottom padding) + the safe-area inset. */
@@ -1042,23 +1075,14 @@ export class HaTabsSubpageDataTable extends KeyboardShortcutMixin(LitElement) {
       padding-right: calc(16px + var(--data-table-inset-right, 0px));
       gap: var(--ha-space-4);
       box-sizing: border-box;
-      background: var(
-        --ha-panel-toolbar-background,
-        var(--primary-background-color)
-      );
-      border-bottom: 1px solid var(--divider-color);
+      background: transparent;
       overflow-x: auto;
       scrollbar-width: none;
     }
     ha-input-search {
       flex: 1;
     }
-    @media (min-width: 871px) {
-      ha-input-search {
-        --ha-input-search-height: 32px;
-        --ha-input-search-border-radius: 10px;
-      }
-    }
+
     .search-toolbar {
       display: flex;
       align-items: center;

@@ -402,8 +402,9 @@ class HaLogbookEntry extends LitElement {
         }
 
         .entry.layout-timeline {
-          grid-template-columns: 72px 36px minmax(0, 1fr);
-          grid-auto-rows: minmax(72px, auto);
+          grid-template-columns: 64px 36px minmax(0, 1fr);
+          column-gap: var(--ha-space-4);
+          grid-auto-rows: minmax(68px, auto);
         }
 
         .entry.layout-list,
@@ -455,8 +456,9 @@ class HaLogbookEntry extends LitElement {
           flex-direction: column;
           align-items: stretch;
           justify-content: center;
-          text-align: end;
-          font-size: var(--ha-font-size-s);
+          text-align: start;
+          font-variant-numeric: tabular-nums;
+          font-size: 13px;
           color: var(--secondary-text-color);
           overflow: hidden;
         }
@@ -555,7 +557,7 @@ class HaLogbookEntry extends LitElement {
           inset: 0;
           border-radius: inherit;
           background-color: var(--node-color);
-          opacity: 0.18;
+          opacity: 0.16;
         }
 
         .node-glyph > * {

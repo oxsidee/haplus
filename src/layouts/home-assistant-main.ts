@@ -119,17 +119,13 @@ export class HomeAssistantMain extends LitElement {
         });
         return;
       }
-      if (this._sidebarNarrow || this.hass.kioskMode) {
+      if (this.narrow || this.hass.kioskMode) {
         this._drawerOpen = ev.detail?.open ?? !this._drawerOpen;
       } else {
+        this._drawerOpen = false;
+        const docked = this.hass.dockedSidebar === "docked";
         fireEvent(this, "hass-dock-sidebar", {
-          dock: ev.detail?.open
-            ? "docked"
-            : ev.detail?.open === false
-              ? "auto"
-              : this.hass.dockedSidebar === "auto"
-                ? "docked"
-                : "auto",
+          dock: (ev.detail?.open ?? !docked) ? "docked" : "always_hidden",
         });
       }
     });
@@ -167,7 +163,7 @@ export class HomeAssistantMain extends LitElement {
   }
 
   private get _sidebarNarrow() {
-    return this.narrow || this.hass.dockedSidebar === "always_hidden";
+    return this.narrow || this.hass.dockedSidebar !== "docked";
   }
 
   private _drawerClosed() {

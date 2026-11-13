@@ -1,24 +1,44 @@
 import {
+  mdiAccount,
   mdiChevronRight,
+  mdiCommentProcessingOutline,
+  mdiDeleteOutline,
+  mdiDevices,
+  mdiDragHorizontalVariant,
   mdiImageEditOutline,
   mdiLockOpenVariant,
+  mdiMagnify,
+  mdiMenu,
   mdiPencilOutline,
   mdiPlus,
+  mdiRobot,
   mdiShieldCheck,
+  mdiSofa,
 } from "@mdi/js";
 import type { HassEntity, UnsubscribeFunc } from "home-assistant-js-websocket";
 import type { PropertyValues } from "lit";
 import { css, html, LitElement, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { styleMap } from "lit/directives/style-map";
-import { getAreasFloorHierarchy } from "../../../common/areas/areas-floor-hierarchy";
+import {
+  type AreasFloorHierarchy,
+  getAreasFloorHierarchy,
+  getAreasOrder,
+} from "../../../common/areas/areas-floor-hierarchy";
 import { formatDateWeekdayDay } from "../../../common/datetime/format_date";
 import { formatTime } from "../../../common/datetime/format_time";
+import type { HASSDomEvent } from "../../../common/dom/fire_event";
 import { fireEvent } from "../../../common/dom/fire_event";
 import { computeDomain } from "../../../common/entity/compute_domain";
 import { stateActive } from "../../../common/entity/state_active";
 import { navigate } from "../../../common/navigate";
 import { formatNumber } from "../../../common/number/format_number";
+import "../../../components/ha-dropdown";
+import type { HaDropdownSelectEvent } from "../../../components/ha-dropdown";
+import "../../../components/ha-dropdown-item";
+import "../../../components/ha-icon-button";
+import "../../../components/ha-sortable";
+import type { HaSortableOptions } from "../../../components/ha-sortable";
 import "../../../components/ha-state-icon";
 import "../../../components/ha-svg-icon";
 import type { RepairsIssue } from "../../../data/repairs";
@@ -27,7 +47,22 @@ import { SubscribeMixin } from "../../../mixins/subscribe-mixin";
 import type { HomeAssistant } from "../../../types";
 import type { LovelaceCard } from "../types";
 import { showAreaRegistryDetailDialog } from "../../config/areas/show-dialog-area-registry-detail";
-import { createAreaRegistryEntry } from "../../../data/area/area_registry";
+import type { AreaRegistryEntry } from "../../../data/area/area_registry";
+import {
+  createAreaRegistryEntry,
+  deleteAreaRegistryEntry,
+  reorderAreaRegistryEntries,
+  updateAreaRegistryEntry,
+} from "../../../data/area/area_registry";
+import type { FloorRegistryEntry } from "../../../data/floor_registry";
+import {
+  createFloorRegistryEntry,
+  deleteFloorRegistryEntry,
+  reorderFloorRegistryEntries,
+  updateFloorRegistryEntry,
+} from "../../../data/floor_registry";
+import { showConfirmationDialog } from "../../../dialogs/generic/show-dialog-box";
+import { showFloorRegistryDetailDialog } from "../../config/areas/show-dialog-floor-registry-detail";
 import {
   fetchFrontendSystemData,
   saveFrontendSystemData,
@@ -86,6 +121,42 @@ interface Alert {
   action: () => void;
 }
 
+const UNASSIGNED = "__unassigned";
+
+let editAreasActive = false;
+
+const SORT_OPTIONS: HaSortableOptions = {
+  sort: true,
+  delay: 300,
+  delayOnTouchOnly: true,
+};
+
+type RootAction =
+  "add_device" | "create_automation" | "create_area" | "add_person";
+
+const ADD_ITEMS: { action: RootAction; icon: string; key: string }[] = [
+  {
+    action: "add_device",
+    icon: mdiDevices,
+    key: "ui.panel.lovelace.menu.add_device",
+  },
+  {
+    action: "create_automation",
+    icon: mdiRobot,
+    key: "ui.panel.lovelace.menu.create_automation",
+  },
+  {
+    action: "create_area",
+    icon: mdiSofa,
+    key: "ui.panel.lovelace.menu.create_area",
+  },
+  {
+    action: "add_person",
+    icon: mdiAccount,
+    key: "ui.panel.lovelace.menu.add_person",
+  },
+];
+
 const capitalize = (text: string) =>
   text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
 
@@ -106,6 +177,8 @@ export class HuiHomeSceneCard
   @state() private _now = new Date();
 
   @state() private _repairs: RepairsIssue[] = [];
+
+  @state() private _editAreas = editAreasActive;
 
   private _timer?: number;
 
@@ -235,17 +308,76 @@ export class HuiHomeSceneCard
     return html`
       <div class="layout">
         <section class="stage">
-          <div class="intro">
-            <div class="overline">
-              <span
-                class="status-dot"
-                style=${styleMap({ "--dot": dot })}
-              ></span>
-              <span>
-                ${formatDateWeekdayDay(this._now, hass.locale, hass.config)} ·
-                ${formatTime(this._now, hass.locale, hass.config)}
-              </span>
+          <div class="topbar">
+            <div class="topbar-start">
+              <button
+                class="circle-btn"
+                aria-label=${hass.localize("ui.sidebar.sidebar_toggle")}
+                title=${hass.localize("ui.sidebar.sidebar_toggle")}
+                @click=${this._toggleMenu}
+              >
+                <ha-svg-icon .path=${mdiMenu}></ha-svg-icon>
+              </button>
+              <div class="overline">
+                <span
+                  class="status-dot"
+                  style=${styleMap({ "--dot": dot })}
+                ></span>
+                <span>
+                  ${formatDateWeekdayDay(this._now, hass.locale, hass.config)} ·
+                  ${formatTime(this._now, hass.locale, hass.config)}
+                </span>
+              </div>
             </div>
+            <div class="topbar-actions">
+              ${
+                isAdmin
+                  ? html`<ha-dropdown @wa-select=${this._addSelected}>
+                      <button
+                        slot="trigger"
+                        class="circle-btn"
+                        aria-label=${hass.localize("ui.panel.lovelace.menu.add")}
+                        title=${hass.localize("ui.panel.lovelace.menu.add")}
+                      >
+                        <ha-svg-icon .path=${mdiPlus}></ha-svg-icon>
+                      </button>
+                      ${ADD_ITEMS.map(
+                        (item) => html`
+                          <ha-dropdown-item .value=${item.action}>
+                            <ha-svg-icon
+                              slot="icon"
+                              .path=${item.icon}
+                            ></ha-svg-icon>
+                            ${hass.localize(item.key as any)}
+                          </ha-dropdown-item>
+                        `
+                      )}
+                    </ha-dropdown>`
+                  : nothing
+              }
+              <button
+                class="circle-btn"
+                aria-label=${hass.localize(
+                  "ui.panel.lovelace.menu.search_home_assistant"
+                )}
+                title=${hass.localize(
+                  "ui.panel.lovelace.menu.search_home_assistant"
+                )}
+                @click=${this._search}
+              >
+                <ha-svg-icon .path=${mdiMagnify}></ha-svg-icon>
+              </button>
+              <button
+                class="circle-btn"
+                aria-label=${hass.localize("ui.panel.lovelace.menu.assist_tooltip")}
+                title=${hass.localize("ui.panel.lovelace.menu.assist_tooltip")}
+                @click=${this._assist}
+              >
+                <ha-svg-icon .path=${mdiCommentProcessingOutline}></ha-svg-icon>
+              </button>
+            </div>
+          </div>
+          <div class="intro">
             <h1>${this._t(`greeting.${greetingKey(this._now)}`)}</h1>
             ${
               summary.length
@@ -354,8 +486,12 @@ export class HuiHomeSceneCard
             <div class="rail-actions">
               ${
                 isAdmin
-                  ? html`<button class="link" @click=${this._addArea}>
-                      + ${this._t("add_area")}
+                  ? html`<button
+                      class="link ${this._editAreas ? "active" : ""}"
+                      aria-pressed=${this._editAreas ? "true" : "false"}
+                      @click=${this._toggleEditAreas}
+                    >
+                      ${this._editAreas ? this._t("done") : this._t("edit_areas")}
                     </button>`
                   : nothing
               }
@@ -483,7 +619,6 @@ export class HuiHomeSceneCard
     const levelOf = (floorId: string) => hass.floors[floorId]?.level ?? 0;
     const floors = hierarchy.floors
       .filter((f) => levelOf(f.id) >= 0)
-      .sort((a, b) => levelOf(a.id) - levelOf(b.id))
       .map((f) => ({
         id: f.id,
         rooms: f.areas.map((a) => ({ id: a, glow: areaGlow(a) })),
@@ -730,32 +865,38 @@ export class HuiHomeSceneCard
     });
   };
 
-  private _renderFloors() {
+  private _hierarchy(): AreasFloorHierarchy {
     const hass = this.hass!;
-    const index = getSceneIndex(hass);
-    const hierarchy = getAreasFloorHierarchy(
+    return getAreasFloorHierarchy(
       Object.values(hass.floors),
       Object.values(hass.areas)
     );
-    const groups = hierarchy.floors
+  }
+
+  private _renderFloors() {
+    const hass = this.hass!;
+    const index = getSceneIndex(hass);
+    const hierarchy = this._hierarchy();
+    const edit = this._editAreas;
+    const floorGroups = hierarchy.floors
       .map((f) => ({
         key: f.id,
         name: hass.floors[f.id]?.name ?? "",
         areas: f.areas,
+        floor: hass.floors[f.id] as FloorRegistryEntry | undefined,
       }))
-      .filter((g) => g.areas.length);
-    if (hierarchy.areas.length) {
-      groups.push({
-        key: "__other",
-        name: groups.length ? this._t("other_areas") : "",
-        areas: hierarchy.areas,
-      });
-    }
-    if (!groups.length) {
+      .filter((g) => edit || g.areas.length);
+    const showOther = edit || hierarchy.areas.length > 0;
+    if (!floorGroups.length && !showOther) {
       return html`<p class="summary">${this._t("no_areas")}</p>`;
     }
 
-    return groups.map((g) => {
+    const renderGroup = (g: {
+      key: string;
+      name: string;
+      areas: string[];
+      floor?: FloorRegistryEntry;
+    }) => {
       const withLights = g.areas.filter((a) =>
         statesOf(hass, index.byArea[a]).some(
           (s) => computeDomain(s.entity_id) === "light"
@@ -767,26 +908,122 @@ export class HuiHomeSceneCard
         )
       );
       return html`
-        <div class="group">
+        <div class="group floor-group" .sortableData=${g.floor}>
           <div class="group-head">
+            ${
+              edit && g.floor
+                ? html`<span class="floor-handle" title=${this._t("drag")}>
+                    <ha-svg-icon
+                      .path=${mdiDragHorizontalVariant}
+                    ></ha-svg-icon>
+                  </span>`
+                : nothing
+            }
             <span class="title">${g.name}</span>
-            <span class="meta">
-              ${
-                withLights.length
-                  ? lit.length
-                    ? this._t("lit_in", {
-                        lit: lit.length,
-                        total: withLights.length,
-                      })
-                    : this._t("lights_off")
-                  : nothing
-              }
-            </span>
+            ${
+              edit
+                ? html`<span class="edit-actions">
+                    <button
+                      class="mini-btn"
+                      data-floor=${g.key}
+                      @click=${this._addAreaToFloor}
+                    >
+                      + ${this._t("add_area")}
+                    </button>
+                    ${
+                      g.floor
+                        ? html`<ha-icon-button
+                              .label=${this._t("edit_floor")}
+                              .path=${mdiPencilOutline}
+                              data-floor=${g.key}
+                              @click=${this._editFloor}
+                            ></ha-icon-button>
+                            <ha-icon-button
+                              .label=${this._t("delete_floor")}
+                              .path=${mdiDeleteOutline}
+                              data-floor=${g.key}
+                              @click=${this._deleteFloor}
+                            ></ha-icon-button>`
+                        : nothing
+                    }
+                  </span>`
+                : html`<span class="meta">
+                    ${
+                      withLights.length
+                        ? lit.length
+                          ? this._t("lit_in", {
+                              lit: lit.length,
+                              total: withLights.length,
+                            })
+                          : this._t("lights_off")
+                        : nothing
+                    }
+                  </span>`
+            }
           </div>
-          <div class="areas">${g.areas.map((a) => this._renderArea(a))}</div>
+          ${
+            edit
+              ? html`<ha-sortable
+                  group="scene-areas"
+                  draggable-selector=".area-card"
+                  .options=${SORT_OPTIONS}
+                  .floor=${g.key}
+                  @item-moved=${this._areaMoved}
+                  @item-added=${this._areaAdded}
+                >
+                  <div class="areas editing">
+                    ${g.areas.map((a) => this._renderArea(a))}
+                    ${
+                      g.areas.length
+                        ? nothing
+                        : html`<p class="drop-hint">${this._t("drop_here")}</p>`
+                    }
+                  </div>
+                </ha-sortable>`
+              : html`<div class="areas">
+                  ${g.areas.map((a) => this._renderArea(a))}
+                </div>`
+          }
         </div>
       `;
-    });
+    };
+
+    return html`
+      ${
+        edit
+          ? html`<ha-sortable
+              handle-selector=".floor-handle"
+              draggable-selector=".floor-group"
+              @item-moved=${this._floorMoved}
+            >
+              <div class="floors">${floorGroups.map(renderGroup)}</div>
+            </ha-sortable>`
+          : floorGroups.map(renderGroup)
+      }
+      ${
+        showOther
+          ? renderGroup({
+              key: UNASSIGNED,
+              name: floorGroups.length ? this._t("other_areas") : "",
+              areas: hierarchy.areas,
+            })
+          : nothing
+      }
+      ${
+        edit
+          ? html`<div class="edit-footer">
+              <button class="chip" @click=${this._addFloor}>
+                <ha-svg-icon .path=${mdiPlus}></ha-svg-icon>
+                <span>${this._t("add_floor")}</span>
+              </button>
+              <button class="chip" @click=${this._addArea}>
+                <ha-svg-icon .path=${mdiPlus}></ha-svg-icon>
+                <span>${this._t("add_area")}</span>
+              </button>
+            </div>`
+          : nothing
+      }
+    `;
   }
 
   private _renderArea(areaId: string) {
@@ -795,6 +1032,7 @@ export class HuiHomeSceneCard
     if (!area) {
       return nothing;
     }
+    const edit = this._editAreas;
     const index = getSceneIndex(hass);
     const all = statesOf(hass, index.byArea[areaId]);
     const lights = all.filter((s) => computeDomain(s.entity_id) === "light");
@@ -837,39 +1075,57 @@ export class HuiHomeSceneCard
       );
     }
 
-    const toggle = (ev: Event) => {
-      ev.stopPropagation();
-      hass.callService("light", on ? "turn_off" : "turn_on", {
-        entity_id: (on ? lightsOn : lights).map((l) => l.entity_id),
-      });
-    };
-
     return html`
-      <div class="area-card ${on ? "lit" : ""}">
+      <div
+        class="area-card ${on ? "lit" : ""} ${edit ? "edit" : ""}"
+        .sortableData=${area}
+      >
+        ${
+          edit
+            ? nothing
+            : html`<button
+                class="area-hit"
+                aria-label=${area.name}
+                data-area=${areaId}
+                @click=${this._areaClicked}
+              ></button>`
+        }
         <div class="area-top">
           <div class="area-text">
-            <button
-              class="area-name"
-              data-area=${areaId}
-              @click=${this._areaClicked}
-            >
-              ${area.name} ›
-            </button>
+            <span class="area-name">${area.name}</span>
             <span class="area-info ${opening ? "warn" : ""}">
               ${info.join(" · ")}
             </span>
           </div>
           ${
-            lights.length
-              ? html`<button
-                  class="toggle"
-                  aria-label=${this._t("toggle_area_lights", { area: area.name })}
-                  aria-pressed=${on ? "true" : "false"}
-                  @click=${toggle}
-                >
-                  <span class="track"><span class="knob"></span></span>
-                </button>`
-              : nothing
+            edit
+              ? html`<span class="area-edit">
+                  <ha-icon-button
+                    .label=${this._t("edit_area")}
+                    .path=${mdiPencilOutline}
+                    data-area=${areaId}
+                    @click=${this._editArea}
+                  ></ha-icon-button>
+                  <ha-icon-button
+                    .label=${this._t("delete_area")}
+                    .path=${mdiDeleteOutline}
+                    data-area=${areaId}
+                    @click=${this._deleteArea}
+                  ></ha-icon-button>
+                </span>`
+              : lights.length
+                ? html`<button
+                    class="toggle"
+                    aria-label=${this._t("toggle_area_lights", {
+                      area: area.name,
+                    })}
+                    aria-pressed=${on ? "true" : "false"}
+                    data-area=${areaId}
+                    @click=${this._toggleAreaLights}
+                  >
+                    <span class="track"><span class="knob"></span></span>
+                  </button>`
+                : nothing
           }
         </div>
         <div class="area-bottom">
@@ -877,7 +1133,7 @@ export class HuiHomeSceneCard
             ${tempValue !== undefined ? `${this._fmt(tempValue)}°` : "\u00a0"}
           </span>
           ${
-            lights.length
+            lights.length && !edit
               ? html`<span class="area-label">
                   ${on ? this._t("light_label") : this._t("off_label")}
                 </span>`
@@ -886,6 +1142,225 @@ export class HuiHomeSceneCard
         </div>
       </div>
     `;
+  }
+
+  private _toggleAreaLights(ev: Event) {
+    ev.stopPropagation();
+    const hass = this.hass!;
+    const areaId = (ev.currentTarget as HTMLElement).dataset.area!;
+    const lights = statesOf(hass, getSceneIndex(hass).byArea[areaId]).filter(
+      (s) => computeDomain(s.entity_id) === "light"
+    );
+    const on = lights.filter(isLightOn);
+    hass.callService("light", on.length ? "turn_off" : "turn_on", {
+      entity_id: (on.length ? on : lights).map((l) => l.entity_id),
+    });
+  }
+
+  private _toggleMenu() {
+    fireEvent(this, "hass-toggle-menu");
+  }
+
+  private _search() {
+    fireEvent(this, "hui-root-action", { action: "search" });
+  }
+
+  private _assist() {
+    fireEvent(this, "hui-root-action", { action: "assist" });
+  }
+
+  private _addSelected(ev: HaDropdownSelectEvent<RootAction>) {
+    const action = ev.detail.item.value;
+    if (action) {
+      fireEvent(this, "hui-root-action", { action });
+    }
+  }
+
+  private _toggleEditAreas() {
+    this._editAreas = !this._editAreas;
+    editAreasActive = this._editAreas;
+  }
+
+  private async _loadConfigTranslations() {
+    await this.hass!.loadFragmentTranslation("config");
+  }
+
+  private async _addAreaToFloor(ev: Event) {
+    const floor = (ev.currentTarget as HTMLElement).dataset.floor;
+    const hass = this.hass!;
+    await this._loadConfigTranslations();
+    showAreaRegistryDetailDialog(this, {
+      createEntry: (values) =>
+        createAreaRegistryEntry(hass, {
+          ...values,
+          floor_id: floor === UNASSIGNED ? null : (floor ?? null),
+        }),
+    });
+  }
+
+  private async _editArea(ev: Event) {
+    const hass = this.hass!;
+    const area = hass.areas[(ev.currentTarget as HTMLElement).dataset.area!];
+    if (!area) {
+      return;
+    }
+    await this._loadConfigTranslations();
+    showAreaRegistryDetailDialog(this, {
+      entry: area,
+      updateEntry: (values) =>
+        updateAreaRegistryEntry(hass.callWS, area.area_id, values),
+    });
+  }
+
+  private async _deleteArea(ev: Event) {
+    const hass = this.hass!;
+    const area = hass.areas[(ev.currentTarget as HTMLElement).dataset.area!];
+    if (!area) {
+      return;
+    }
+    await this._loadConfigTranslations();
+    const confirmed = await showConfirmationDialog(this, {
+      title: hass.localize("ui.panel.config.areas.delete.confirmation_title", {
+        name: area.name,
+      }),
+      text: hass.localize("ui.panel.config.areas.delete.confirmation_text"),
+      confirmText: hass.localize("ui.common.delete"),
+      dismissText: hass.localize("ui.common.cancel"),
+      destructive: true,
+    });
+    if (confirmed) {
+      await deleteAreaRegistryEntry(hass, area.area_id);
+    }
+  }
+
+  private async _addFloor() {
+    await this._openFloorDialog();
+  }
+
+  private async _editFloor(ev: Event) {
+    const floor =
+      this.hass!.floors[(ev.currentTarget as HTMLElement).dataset.floor!];
+    await this._openFloorDialog(floor);
+  }
+
+  private async _openFloorDialog(entry?: FloorRegistryEntry) {
+    const hass = this.hass!;
+    await this._loadConfigTranslations();
+    showFloorRegistryDetailDialog(this, {
+      entry,
+      createEntry: async (values, addedAreas) => {
+        const floor = await createFloorRegistryEntry(hass.callWS, {
+          ...values,
+          level: values.level ?? Object.keys(hass.floors).length,
+        });
+        addedAreas.forEach((areaId) => {
+          updateAreaRegistryEntry(hass.callWS, areaId, {
+            floor_id: floor.floor_id,
+          });
+        });
+      },
+      updateEntry: async (values, addedAreas, removedAreas) => {
+        const floor = await updateFloorRegistryEntry(
+          hass,
+          entry!.floor_id,
+          values
+        );
+        addedAreas.forEach((areaId) => {
+          updateAreaRegistryEntry(hass.callWS, areaId, {
+            floor_id: floor.floor_id,
+          });
+        });
+        removedAreas.forEach((areaId) => {
+          updateAreaRegistryEntry(hass.callWS, areaId, { floor_id: null });
+        });
+      },
+    });
+  }
+
+  private async _deleteFloor(ev: Event) {
+    const hass = this.hass!;
+    const floor = hass.floors[(ev.currentTarget as HTMLElement).dataset.floor!];
+    if (!floor) {
+      return;
+    }
+    await this._loadConfigTranslations();
+    const confirmed = await showConfirmationDialog(this, {
+      title: hass.localize("ui.panel.config.areas.picker.floor.confirm_delete"),
+      text: hass.localize(
+        "ui.panel.config.areas.picker.floor.confirm_delete_text"
+      ),
+      confirmText: hass.localize("ui.common.delete"),
+      dismissText: hass.localize("ui.common.cancel"),
+      destructive: true,
+    });
+    if (confirmed) {
+      await deleteFloorRegistryEntry(hass, floor.floor_id);
+    }
+  }
+
+  private async _floorMoved(ev: HASSDomEvent<HASSDomEvents["item-moved"]>) {
+    ev.stopPropagation();
+    const hass = this.hass!;
+    const { oldIndex, newIndex } = ev.detail;
+    const ids = this._hierarchy().floors.map((f) => f.id);
+    const [moved] = ids.splice(oldIndex, 1);
+    ids.splice(newIndex, 0, moved);
+    await reorderFloorRegistryEntries(hass, ids);
+    await Promise.all(
+      ids.map((id, level) =>
+        hass.floors[id]?.level === level
+          ? undefined
+          : updateFloorRegistryEntry(hass, id, { level })
+      )
+    );
+  }
+
+  private async _areaMoved(ev: HASSDomEvent<HASSDomEvents["item-moved"]>) {
+    ev.stopPropagation();
+    const floor = (ev.currentTarget as HTMLElement & { floor: string }).floor;
+    const { oldIndex, newIndex } = ev.detail;
+    const hierarchy = this._hierarchy();
+    const move = (areas: string[]) => {
+      const next = [...areas];
+      const [moved] = next.splice(oldIndex, 1);
+      next.splice(newIndex, 0, moved);
+      return next;
+    };
+    const updated: AreasFloorHierarchy = {
+      floors: hierarchy.floors.map((f) =>
+        f.id === floor ? { ...f, areas: move(f.areas) } : f
+      ),
+      areas: floor === UNASSIGNED ? move(hierarchy.areas) : hierarchy.areas,
+    };
+    await reorderAreaRegistryEntries(this.hass!, getAreasOrder(updated));
+  }
+
+  private async _areaAdded(ev: HASSDomEvent<HASSDomEvents["item-added"]>) {
+    ev.stopPropagation();
+    const floor = (ev.currentTarget as HTMLElement & { floor: string }).floor;
+    const area = ev.detail.data as AreaRegistryEntry;
+    const newFloor = floor === UNASSIGNED ? null : floor;
+    const hierarchy = this._hierarchy();
+    const insert = (areas: string[]) => {
+      const next = areas.filter((id) => id !== area.area_id);
+      next.splice(ev.detail.index, 0, area.area_id);
+      return next;
+    };
+    const updated: AreasFloorHierarchy = {
+      floors: hierarchy.floors.map((f) =>
+        f.id === newFloor
+          ? { ...f, areas: insert(f.areas) }
+          : { ...f, areas: f.areas.filter((id) => id !== area.area_id) }
+      ),
+      areas:
+        newFloor === null
+          ? insert(hierarchy.areas)
+          : hierarchy.areas.filter((id) => id !== area.area_id),
+    };
+    await reorderAreaRegistryEntries(this.hass!, getAreasOrder(updated));
+    await updateAreaRegistryEntry(this.hass!.callWS, area.area_id, {
+      floor_id: newFloor,
+    });
   }
 
   private _renderScenes() {
@@ -1046,6 +1521,68 @@ export class HuiHomeSceneCard
   static styles = [
     sceneStyles,
     css`
+      :host {
+        --scene-min-height: calc(
+          100vh - var(--safe-area-inset-top, 0px) - var(
+              --view-container-padding-top,
+              0px
+            )
+        );
+      }
+
+      .intro {
+        padding-top: 0;
+      }
+
+      .dock {
+        flex-wrap: nowrap;
+        justify-content: safe center;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+      }
+
+      .dock::-webkit-scrollbar {
+        display: none;
+      }
+
+      .dock-item,
+      .dock-edit {
+        flex: none;
+      }
+
+      @media (min-width: 1101px) and (min-height: 640px) {
+        .layout {
+          height: var(--scene-min-height);
+        }
+
+        .stage {
+          min-height: 0;
+          gap: var(--ha-space-4);
+        }
+
+        .rail {
+          max-height: 100%;
+        }
+
+        .visual {
+          flex: 1 1 0;
+          min-height: 0;
+        }
+
+        .visual svg.house {
+          width: 100%;
+          height: 100%;
+          max-height: 100%;
+        }
+
+        .home-photo {
+          width: auto;
+          height: 100%;
+          max-width: 100%;
+        }
+      }
+
       .areas {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
@@ -1053,7 +1590,8 @@ export class HuiHomeSceneCard
       }
 
       .area-card {
-        min-height: 136px;
+        position: relative;
+        height: 136px;
         box-sizing: border-box;
         padding: 14px 8px 14px 16px;
         border-radius: var(--ha-area-card-border-radius, 24px);
@@ -1063,10 +1601,16 @@ export class HuiHomeSceneCard
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        gap: 10px;
+        gap: 6px;
+        overflow: hidden;
         transition:
           background 300ms ease,
-          border-color 300ms ease;
+          border-color 300ms ease,
+          transform 150ms ease;
+      }
+
+      .area-card:not(.edit):hover {
+        border-color: var(--scene-bd2);
       }
 
       .area-card.lit {
@@ -1078,11 +1622,45 @@ export class HuiHomeSceneCard
         border-color: color-mix(in srgb, #f2b45a 38%, transparent);
       }
 
+      .area-card.edit {
+        cursor: grab;
+        border-style: dashed;
+      }
+
+      .area-hit {
+        position: absolute;
+        inset: 0;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        cursor: pointer;
+        border-radius: inherit;
+        z-index: 0;
+      }
+
       .area-top {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 6px;
+        min-width: 0;
+      }
+
+      .area-top .toggle,
+      .area-edit {
+        pointer-events: auto;
+      }
+
+      .area-edit {
+        display: flex;
+        margin: -6px -2px 0 0;
+        --ha-icon-button-size: 36px;
+        --mdc-icon-size: 18px;
+        color: var(--scene-text2);
       }
 
       .area-text {
@@ -1097,17 +1675,19 @@ export class HuiHomeSceneCard
         font-size: 16px;
         font-weight: 500;
         color: var(--scene-text);
-        background: none;
-        border: 0;
-        padding: 0;
-        text-align: start;
-        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .area-info {
         font-size: 12px;
         color: var(--scene-text2);
         line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .area-info.warn {
@@ -1115,7 +1695,9 @@ export class HuiHomeSceneCard
       }
 
       .area-bottom {
-        margin-top: auto;
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
         display: flex;
         align-items: baseline;
         justify-content: space-between;
@@ -1139,6 +1721,118 @@ export class HuiHomeSceneCard
 
       .area-card.lit .area-label {
         color: var(--scene-light);
+      }
+
+      .floors {
+        display: flex;
+        flex-direction: column;
+        gap: var(--ha-space-7);
+      }
+
+      .floor-handle {
+        cursor: grab;
+        color: var(--scene-text2);
+        display: flex;
+        --mdc-icon-size: 18px;
+        margin-inline-end: 6px;
+      }
+
+      .group-head .title {
+        flex: 1;
+      }
+
+      .edit-actions {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        --ha-icon-button-size: 32px;
+        --mdc-icon-size: 18px;
+        color: var(--scene-text2);
+      }
+
+      .mini-btn {
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 14px;
+        border: 1px solid var(--scene-bd);
+        background: transparent;
+        color: var(--scene-text2);
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .areas.editing {
+        min-height: 60px;
+        border-radius: 24px;
+        outline: 1px dashed var(--scene-bd);
+        outline-offset: 4px;
+      }
+
+      .drop-hint {
+        grid-column: 1 / -1;
+        margin: 0;
+        padding: 18px 0;
+        text-align: center;
+        font-size: 13px;
+        color: var(--scene-text3);
+      }
+
+      .edit-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--ha-space-2);
+      }
+
+      .link.active {
+        color: var(--scene-text);
+        font-weight: 500;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--ha-space-3);
+      }
+
+      .topbar-start,
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--ha-space-3);
+        min-width: 0;
+      }
+
+      .topbar-start {
+        flex: 1 1 auto;
+      }
+
+      .topbar-actions {
+        flex: none;
+        gap: var(--ha-space-2);
+      }
+
+      @media (max-width: 600px) {
+        .topbar-start,
+        .topbar-actions {
+          gap: var(--ha-space-1);
+        }
+      }
+
+      .topbar .circle-btn {
+        color: var(--scene-text2);
+        flex: none;
+      }
+
+      .topbar .overline {
+        min-width: 0;
+      }
+
+      .topbar .overline span:last-child {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .alerts .group-head {

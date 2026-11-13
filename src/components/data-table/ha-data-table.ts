@@ -159,6 +159,9 @@ export class HaDataTable extends LitElement {
 
   @property({ type: Boolean, reflect: true }) public narrow = false;
 
+  @property({ type: Boolean, reflect: true, attribute: "card-rows" })
+  public cardRows = false;
+
   @property({ type: Object }) public columns: DataTableColumnContainer = {};
 
   @property({ type: Array }) public data: DataTableRowData[] = [];
@@ -314,6 +317,9 @@ export class HaDataTable extends LitElement {
   }
 
   protected updated(changedProps: PropertyValues<this>) {
+    if (changedProps.has("selectable")) {
+      this.toggleAttribute("selecting", this.selectable);
+    }
     // The sticky group header may have just been rendered, and the items may
     // have changed (filter, sort, collapse) without the visible range changing
     this._positionStickyGroupHeader();
@@ -452,9 +458,13 @@ export class HaDataTable extends LitElement {
   }
 
   private _memRenderRow = memoizeOne(
-    (columns: DataTableColumnContainer, narrow: boolean) =>
+    (
+      columns: DataTableColumnContainer,
+      narrow: boolean,
+      items?: DataTableRowData[]
+    ) =>
       (row: DataTableRowData, index: number) =>
-        this._renderRow(columns, narrow, row, index)
+        this._renderRow(columns, narrow, row, index, items)
   );
 
   private _sortedColumns = memoizeOne(
@@ -492,8 +502,6 @@ export class HaDataTable extends LitElement {
   protected render() {
     const columns = this._sortedColumns(this.columns, this.columnOrder);
 
-    const renderRow = this._memRenderRow(columns, this.narrow);
-
     const filteredDataLength = this._filteredData?.length || 0;
 
     const items = this._filteredData
@@ -509,6 +517,12 @@ export class HaDataTable extends LitElement {
           this.sortDirection
         )
       : [];
+
+    const renderRow = this._memRenderRow(
+      columns,
+      this.narrow,
+      this.cardRows ? items : undefined
+    );
 
     // The pinned group header is the same row as its group's header
     const stickyGroupIndex =
@@ -826,11 +840,17 @@ export class HaDataTable extends LitElement {
       ).length
   );
 
+  private _isCardEdge(items: DataTableRowData[] | undefined, index: number) {
+    const item = items?.[index];
+    return !item || Boolean(item.append) || Boolean(item.empty);
+  }
+
   private _renderRow = (
     columns: DataTableColumnContainer,
     narrow: boolean,
     row: DataTableRowData,
-    index: number
+    index: number,
+    items?: DataTableRowData[]
   ) => {
     // not sure how this happens...
     if (!row) {
@@ -865,6 +885,8 @@ export class HaDataTable extends LitElement {
             String(row[this.id])
           ),
           clickable: this.clickable,
+          "card-first": this.cardRows && this._isCardEdge(items, index - 1),
+          "card-last": this.cardRows && this._isCardEdge(items, index + 1),
         })}"
         aria-selected=${ifDefined(
           this._checkedRows.includes(String(row[this.id])) ? true : undefined
@@ -2001,6 +2023,65 @@ export class HaDataTable extends LitElement {
         }
 
         /* Keep focused rows clear of the sticky group header */
+        :host([card-rows]) {
+          --data-table-row-height: 72px;
+        }
+
+        :host([card-rows]:not([selecting])) .mdc-data-table__header-row {
+          display: none;
+        }
+
+        :host([card-rows]) .mdc-data-table__row ~ .mdc-data-table__row {
+          border-top: 0;
+        }
+
+        :host([card-rows])
+          .mdc-data-table__row:not(.group-header-row):not(.empty-row):not(
+            .sticky-group-header
+          ):not(.mdc-data-table__header-row) {
+          background-color: var(--card-background-color);
+          border-inline: 1px solid var(--divider-color);
+          border-bottom: 1px solid var(--divider-color);
+        }
+
+        :host([card-rows]) .mdc-data-table__row.card-first {
+          border-top: 1px solid var(--divider-color);
+          border-start-start-radius: 24px;
+          border-start-end-radius: 24px;
+        }
+
+        :host([card-rows]) .mdc-data-table__row.card-last {
+          border-end-start-radius: 24px;
+          border-end-end-radius: 24px;
+        }
+
+        :host([card-rows])
+          .mdc-data-table__row.clickable:not(
+            .mdc-data-table__row--selected
+          ):hover {
+          background-color: color-mix(
+            in srgb,
+            var(--primary-text-color) 4%,
+            var(--card-background-color)
+          );
+        }
+
+        :host([card-rows]) .group-header-row {
+          align-items: flex-end;
+        }
+
+        :host([card-rows]) .group-header {
+          padding-top: 18px;
+          font-size: 12px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--secondary-text-color);
+        }
+
+        :host([card-rows]) .sticky-group-header {
+          border-bottom: 0;
+        }
+
         lit-virtualizer.grouped {
           scroll-padding-top: var(--data-table-row-height, 52px);
         }

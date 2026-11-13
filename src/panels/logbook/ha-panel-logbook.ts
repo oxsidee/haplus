@@ -34,6 +34,8 @@ import { deepEqual } from "../../common/util/deep-equal";
 import { shallowEqual } from "../../common/util/shallow-equal";
 import "../../components/date-picker/ha-date-range-nav";
 import "../../components/ha-button";
+import "../../components/ha-page-heading";
+import { formatRangeTitle } from "../../common/datetime/format_range_title";
 import "../../components/ha-dropdown";
 import type { HaDropdownSelectEvent } from "../../components/ha-dropdown";
 import "../../components/ha-dropdown-item";
@@ -142,8 +144,6 @@ export class HaPanelLogbook extends LitElement {
         .narrow=${this.narrow}
         .backButton=${!!this._showBack}
       >
-        <div slot="title">${this.hass.localize("panel.logbook")}</div>
-
         <ha-dropdown slot="actionItems" @wa-select=${this._handleMenuAction}>
           <ha-icon-button
             slot="trigger"
@@ -221,7 +221,16 @@ export class HaPanelLogbook extends LitElement {
                 : nothing
             }
             <div class="content-column">
-              <div class="toolbar">
+              <ha-page-heading
+                class="page-heading"
+                .overline=${this.hass.localize("panel.logbook")}
+                .heading=${formatRangeTitle(
+                  this._time.range[0],
+                  this._time.range[1],
+                  this.hass.locale,
+                  this.hass.config
+                )}
+              >
                 ${
                   this._sourcesShown() && !this.narrow
                     ? nothing
@@ -240,7 +249,7 @@ export class HaPanelLogbook extends LitElement {
                   extended-presets
                   time-picker
                 ></ha-date-range-nav>
-              </div>
+              </ha-page-heading>
 
               <ha-logbook
                 .hass=${this.hass}
@@ -726,6 +735,13 @@ export class HaPanelLogbook extends LitElement {
         ha-logbook {
           flex: 1;
           min-height: 0;
+          --logbook-horizontal-padding: clamp(16px, 3vw, 48px);
+          --logbook-date-background: var(--primary-background-color);
+        }
+
+        .page-heading {
+          flex-shrink: 0;
+          padding: var(--ha-space-2) clamp(16px, 3vw, 48px) var(--ha-space-5);
         }
       `,
     ];

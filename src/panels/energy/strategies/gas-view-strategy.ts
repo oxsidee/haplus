@@ -24,17 +24,22 @@ export class GasViewStrategy extends ReactiveElement {
     const hidden = _config.hidden_cards;
 
     const view: LovelaceViewConfig = {
+      hide_header: !!_config.single_view,
       type: "sections",
       max_columns: 3,
-      sections: [{ type: "grid", cards: [], column_span: 3 }],
-      footer: {
-        card: {
-          type: "energy-date-selection",
-          collection_key: collectionKey,
-          opening_direction: "right",
-          vertical_opening_direction: "up",
+      sections: [
+        {
+          type: "grid",
+          cards: [
+            {
+              type: "energy-heading",
+              collection_key: collectionKey,
+              show_menu: !!_config.single_view,
+            },
+          ],
+          column_span: 3,
         },
-      },
+      ],
     };
 
     const energyCollection = getEnergyDataCollection(hass.connection, {

@@ -267,6 +267,10 @@ export const sceneStyles = css`
     opacity: 1;
   }
 
+  .visual svg.house {
+    pointer-events: none;
+  }
+
   .visual svg.house,
   .visual svg.room {
     display: block;
@@ -691,6 +695,7 @@ export const sceneStyles = css`
   @media (prefers-reduced-motion: reduce) {
     * {
       transition: none !important;
+      animation: none !important;
     }
   }
 `;

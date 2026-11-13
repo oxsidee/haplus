@@ -31,13 +31,21 @@ import type {
   MediaPlayerItem,
   MediaPlayerLayoutType,
 } from "../../data/media-player";
-import { BROWSER_PLAYER, mediaPlayerPlayMedia } from "../../data/media-player";
+import {
+  BROWSER_PLAYER,
+  MediaPlayerEntityFeature,
+  mediaPlayerPlayMedia,
+} from "../../data/media-player";
+import { supportsFeature } from "../../common/entity/supports-feature";
 import type { ResolvedMediaSource } from "../../data/media_source";
 import { resolveMediaSource } from "../../data/media_source";
 import { showAlertDialog } from "../../dialogs/generic/show-dialog-box";
 import { haStyle } from "../../resources/styles";
 import type { HomeAssistant, Route } from "../../types";
+import "../../components/ha-page-heading";
 import "./ha-bar-media-player";
+import "./ha-media-now-playing";
+import "./ha-media-players-rail";
 import type { BarMediaPlayer } from "./ha-bar-media-player";
 import { showWebBrowserPlayMediaDialog } from "./show-media-player-dialog";
 import type { HaDropdownSelectEvent } from "../../components/ha-dropdown";
@@ -85,11 +93,20 @@ class PanelMediaBrowser extends LitElement {
   })
   private _entityId = BROWSER_PLAYER;
 
-  @query("ha-media-player-browse") private _browser!: HaMediaPlayerBrowse;
+  @query("ha-media-player-browse") private _browser?: HaMediaPlayerBrowse;
 
   @query("ha-bar-media-player") private _player!: BarMediaPlayer;
 
   protected render(): TemplateResult {
+    const atRoot = this._navigateIds.length === 1;
+    const showHero =
+      !this.narrow && atRoot && this._entityId !== BROWSER_PLAYER;
+    const showBar = !showHero;
+    const playerState = this.hass.states[this._entityId];
+    const canBrowse =
+      this._entityId === BROWSER_PLAYER ||
+      (playerState !== undefined &&
+        supportsFeature(playerState, MediaPlayerEntityFeature.BROWSE_MEDIA));
     return html`
       <ha-top-app-bar-fixed .narrow=${this.narrow}>
         ${
@@ -102,15 +119,6 @@ class PanelMediaBrowser extends LitElement {
               `
             : nothing
         }
-        <h1 class="page-title" slot="title">
-          ${
-            !this._currentItem
-              ? this.hass.localize(
-                  "ui.components.media-browser.media-player-browser"
-                )
-              : this._currentItem.title
-          }
-        </h1>
         <ha-media-manage-button
           slot="actionItems"
           .currentItem=${this._currentItem}
@@ -150,15 +158,68 @@ class PanelMediaBrowser extends LitElement {
             <ha-svg-icon slot="icon" .path=${mdiListBoxOutline}></ha-svg-icon>
           </ha-dropdown-item>
         </ha-dropdown>
-        <ha-media-player-browse
-          .entityId=${this._entityId}
-          .navigateIds=${this._navigateIds}
-          .preferredLayout=${this._preferredLayout}
-          @media-picked=${this._mediaPicked}
-          @media-browsed=${this._mediaBrowsed}
-        ></ha-media-player-browse>
+        <div class="layout">
+          <div class="main ${showBar ? "with-bar" : ""}">
+            <ha-page-heading
+              class="page-heading ${showHero ? "compact" : ""}"
+              .overline=${this.hass.localize("panel.media_browser")}
+              .heading=${
+                showHero
+                  ? ""
+                  : !this._currentItem
+                    ? this.hass.localize(
+                        "ui.components.media-browser.media-player-browser"
+                      )
+                    : this._currentItem.title
+              }
+            ></ha-page-heading>
+            ${
+              showHero
+                ? html`<ha-media-now-playing
+                      class="hero"
+                      .hass=${this.hass}
+                      .entityId=${this._entityId}
+                    ></ha-media-now-playing>
+                    ${
+                      canBrowse
+                        ? html`<div class="sources-head">
+                            <h2>
+                              ${this.hass.localize(
+                                "ui.panel.media-browser.redesign.sources"
+                              )}
+                            </h2>
+                          </div>`
+                        : nothing
+                    }`
+                : nothing
+            }
+            ${
+              canBrowse || !showHero
+                ? html`<ha-media-player-browse
+                    .entityId=${this._entityId}
+                    .navigateIds=${this._navigateIds}
+                    .preferredLayout=${this._preferredLayout}
+                    @media-picked=${this._mediaPicked}
+                    @media-browsed=${this._mediaBrowsed}
+                  ></ha-media-player-browse>`
+                : nothing
+            }
+          </div>
+          ${
+            this.narrow
+              ? nothing
+              : html`<aside class="rail">
+                  <ha-media-players-rail
+                    .hass=${this.hass}
+                    .entityId=${this._entityId}
+                    @player-picked=${this._playerPicked}
+                  ></ha-media-players-rail>
+                </aside>`
+          }
+        </div>
       </ha-top-app-bar-fixed>
       <ha-bar-media-player
+        class=${showBar ? "" : "hidden"}
         .hass=${this.hass}
         .entityId=${this._entityId}
         .narrow=${this.narrow}
@@ -322,7 +383,7 @@ class PanelMediaBrowser extends LitElement {
   }
 
   private _refreshMedia() {
-    this._browser.refresh();
+    this._browser?.refresh();
   }
 
   static get styles(): CSSResultGroup {
@@ -333,32 +394,95 @@ class PanelMediaBrowser extends LitElement {
           --mdc-theme-primary: var(--app-header-text-color);
         }
 
-        ha-media-player-browse {
+        .layout {
+          display: flex;
           height: calc(
-            100vh -
-              (
-                100px + var(--header-height, 0px) +
-                  var(--safe-area-inset-top, 0px) +
-                  var(--safe-area-inset-bottom, 0px)
-              )
+            100vh - var(--header-height, 0px) - var(
+                --safe-area-inset-top,
+                0px
+              ) - var(--safe-area-inset-bottom, 0px)
           );
+        }
+
+        .main {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          background: radial-gradient(
+            900px 600px at 20% 20%,
+            color-mix(
+              in srgb,
+              var(--state-media_player-active-color, var(--indigo-color)) 8%,
+              transparent
+            ),
+            transparent 70%
+          );
+        }
+
+        .main.with-bar {
+          padding-bottom: 100px;
+        }
+
+        .rail {
+          flex: 0 0 340px;
+          box-sizing: border-box;
+          padding: 36px 24px 40px;
+          background: var(--sidebar-background-color);
+          border-inline-start: 1px solid var(--divider-color);
+          overflow-y: auto;
+        }
+
+        .page-heading {
+          display: flex;
+          flex: none;
+          height: 112px;
+          box-sizing: border-box;
+          padding: var(--ha-space-2) clamp(16px, 3vw, 48px) var(--ha-space-5);
+        }
+
+        .page-heading.compact {
+          height: auto;
+          padding-bottom: 0;
+          padding-top: var(--ha-space-4);
+        }
+
+        .hero {
+          flex: none;
+          padding: var(--ha-space-7) clamp(16px, 3vw, 48px) var(--ha-space-6);
+        }
+
+        .sources-head {
+          flex: none;
+          padding: var(--ha-space-2) clamp(16px, 3vw, 48px) 0;
+        }
+
+        .sources-head h2 {
+          margin: 0;
+          font-size: 22px;
+          font-weight: 400;
+          letter-spacing: -0.015em;
+        }
+
+        :host([narrow]) .page-heading {
+          height: auto;
+          --ha-page-heading-size: 32px;
+          padding: var(--ha-space-2) var(--ha-space-4) var(--ha-space-3);
+        }
+
+        ha-media-player-browse {
+          flex: 1;
+          min-height: 0;
+        }
+
+        ha-bar-media-player.hidden {
+          display: none;
         }
 
         .page-title {
           font-size: inherit;
           margin: inherit;
           line-height: inherit;
-        }
-
-        :host([narrow]) ha-media-player-browse {
-          height: calc(
-            100vh -
-              (
-                68px + var(--header-height, 0px) +
-                  var(--safe-area-inset-top, 0px) +
-                  var(--safe-area-inset-bottom, 0px)
-              )
-          );
         }
 
         .selected_menu_item {
@@ -371,12 +495,15 @@ class PanelMediaBrowser extends LitElement {
 
         ha-bar-media-player {
           position: fixed;
-          bottom: var(--safe-area-inset-bottom, 0px);
+          bottom: calc(var(--safe-area-inset-bottom, 0px) + 16px);
+          margin-inline-start: 16px;
+          border-radius: 24px;
+          overflow: hidden;
+          border: 1px solid var(--divider-color);
+          box-shadow: var(--ha-box-shadow-l);
           width: calc(
-            var(--ha-top-app-bar-width, 100%) - var(
-                --safe-area-inset-right,
-                0px
-              )
+            var(--ha-top-app-bar-width, 100%) - 32px -
+              340px - var(--safe-area-inset-right, 0px)
           );
         }
         :host([narrow]) ha-bar-media-player {

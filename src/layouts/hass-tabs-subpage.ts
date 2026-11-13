@@ -113,6 +113,9 @@ export class HassTabsSubpage extends LitElement {
 
   @state() private _activeTab?: PageNavigation;
 
+  @property({ type: Boolean, attribute: "plain-heading" })
+  public plainHeading = false;
+
   @state() private _hasCustomHeader = false;
 
   @state() private _hasCustomToolbar = false;
@@ -232,10 +235,11 @@ export class HassTabsSubpage extends LitElement {
                 : ""
             }
             ${
-              this.showTabs && !this._narrow
+              this.showTabs && !this._narrow && this.plainHeading
                 ? html`<div id="tabbar">${tabs}</div>`
                 : ""
             }
+            <div class="toolbar-spacer"></div>
             <div id="toolbar-icon">
               <slot name="toolbar-icon"></slot>
             </div>
@@ -262,6 +266,19 @@ export class HassTabsSubpage extends LitElement {
           ${
             hiddenHeading
               ? html`<h1 class="visually-hidden">${hiddenHeading}</h1>`
+              : nothing
+          }
+          ${
+            this.showTabs && !this._narrow && !this.plainHeading
+              ? html`<div class="page-heading">
+                  <div class="page-heading-text">
+                    <span class="overline">${this._sectionName(localize)}</span>
+                    <span class="page-title" aria-hidden="true"
+                      >${hiddenHeading}</span
+                    >
+                  </div>
+                  <div id="tabbar" class="heading-tabs">${tabs}</div>
+                </div>`
               : nothing
           }
           <slot></slot>
@@ -303,6 +320,38 @@ export class HassTabsSubpage extends LitElement {
     }
     this._hasCustomToolbar =
       (ev.target as HTMLSlotElement).assignedNodes().length > 0;
+  }
+
+  private _sectionName(localize: LocalizeFunc): string {
+    const path = this.tabs?.[0]?.path ?? "";
+    const SECTIONS: [RegExp, string][] = [
+      [
+        /^\/config\/(integrations|devices|entities|helpers)/,
+        "ui.panel.config.dashboard.devices.main",
+      ],
+      [
+        /^\/config\/(automation|scene|script|blueprint)/,
+        "ui.panel.config.dashboard.automations.main",
+      ],
+      [
+        /^\/config\/(areas|labels|zone)/,
+        "ui.panel.config.dashboard.areas.main",
+      ],
+      [
+        /^\/config\/(lovelace|dashboards)/,
+        "ui.panel.config.dashboard.dashboards.main",
+      ],
+      [/^\/config\/(person|users)/, "ui.panel.config.dashboard.people.main"],
+      [
+        /^\/config\/voice-assistants/,
+        "ui.panel.config.dashboard.voice_assistants.main",
+      ],
+    ];
+    const match = SECTIONS.find(([re]) => re.test(path));
+    return (
+      (match ? localize(match[1] as LocalizeKeys) : "") ||
+      localize("panel.config")
+    );
   }
 
   private _tabName(
@@ -507,6 +556,48 @@ export class HassTabsSubpage extends LitElement {
           font: inherit;
         }
 
+        .content:has(.page-heading) {
+          --ha-page-heading-height: 112px;
+        }
+        .page-heading {
+          height: var(--ha-page-heading-height, auto);
+          display: flex;
+          flex-wrap: wrap;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: var(--ha-space-5);
+          max-width: var(--ha-page-heading-max-width, 1180px);
+          margin: 0 auto;
+          box-sizing: border-box;
+          padding: var(--ha-space-4) var(--ha-space-4) var(--ha-space-2);
+        }
+        .page-heading-text {
+          display: flex;
+          flex-direction: column;
+          gap: var(--ha-space-2);
+          min-width: 0;
+        }
+        .page-heading .overline {
+          font-size: 12px;
+          letter-spacing: var(--ha-letter-spacing-overline, 0.24em);
+          color: var(--secondary-text-color);
+          font-weight: var(--ha-font-weight-medium);
+          text-transform: uppercase;
+        }
+        .page-title {
+          font-size: clamp(36px, 4.6vw, 56px);
+          line-height: 1;
+          font-weight: var(--ha-font-weight-thin, 200);
+          letter-spacing: -0.035em;
+          color: var(--primary-text-color);
+        }
+        .heading-tabs a {
+          text-decoration: none;
+          color: inherit;
+        }
+        .toolbar-spacer {
+          flex: 1;
+        }
         .content {
           position: relative;
           width: 100%;

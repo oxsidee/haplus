@@ -140,7 +140,12 @@ export class EnergyDashboardStrategy extends ReactiveElement {
     return {
       views: views.map((view) => ({
         ...view,
-        strategy: { ...view.strategy, hidden_cards: hidden },
+        hide_header: views.length === 1,
+        strategy: {
+          ...view.strategy,
+          hidden_cards: hidden,
+          single_view: views.length === 1,
+        },
         title:
           view.title ||
           hass.localize(`ui.panel.energy.title.${view.path}` as LocalizeKeys),

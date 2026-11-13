@@ -4,7 +4,6 @@ import type { CSSResultGroup, PropertyValues } from "lit";
 import { LitElement, css, html, nothing } from "lit";
 import { customElement, property, query, state } from "lit/decorators";
 import { styleMap } from "lit/directives/style-map";
-import { atLeastVersion } from "../../common/config/version";
 import { navigate } from "../../common/navigate";
 import { debounce } from "../../common/util/debounce";
 import { deepEqual } from "../../common/util/deep-equal";
@@ -23,7 +22,6 @@ import type { LovelaceDashboardStrategyConfig } from "../../data/lovelace/config
 import { SubscribeMixin } from "../../mixins/subscribe-mixin";
 import { mdiHomeAssistant } from "../../resources/home-assistant-logo-svg";
 import type { HomeAssistant, PanelInfo, Route } from "../../types";
-import { showToast } from "../../util/toast";
 import { showAreaRegistryDetailDialog } from "../config/areas/show-dialog-area-registry-detail";
 import { showDeviceRegistryDetailDialog } from "../config/devices/device-registry-detail/show-dialog-device-registry-detail";
 import { showAddIntegrationDialog } from "../config/integrations/show-add-integration-dialog";
@@ -34,9 +32,7 @@ import {
   generateLovelaceDashboardStrategy,
 } from "../lovelace/strategies/get-strategy";
 import type { Lovelace } from "../lovelace/types";
-import { showEditHomeDialog } from "./dialogs/show-dialog-edit-home";
 import { showNewOverviewDialog } from "./dialogs/show-dialog-new-overview";
-import { hasLegacyOverviewPanel } from "../../data/panel";
 
 @customElement("ha-panel-home")
 class PanelHome extends SubscribeMixin(LitElement) {
@@ -93,24 +89,7 @@ class PanelHome extends SubscribeMixin(LitElement) {
     ];
   }
 
-  private get _showBanner(): boolean {
-    // Don't show until the config loaded or if already dismissed
-    if (!this._config || this._config.welcome_banner_dismissed) {
-      return false;
-    }
-    // Don't show if HA is not running
-    if (this.hass.config.state !== "RUNNING") {
-      return false;
-    }
-    // Show banner only for users who:
-    // 1. Were onboarded before 2026.2 (or have no onboarded_version)
-    // 2. Don't have a custom "lovelace" dashboard (old overview)
-    const onboardedVersion = this.hass.systemData?.onboarded_version;
-    const isNewInstance =
-      onboardedVersion && atLeastVersion(onboardedVersion, 2026, 2);
-    const hasOldOverview = hasLegacyOverviewPanel(this.hass);
-    return !isNewInstance && !hasOldOverview;
-  }
+  private readonly _showBanner = false;
 
   private _bannerHeight = new ResizeController(this, {
     target: null,
@@ -256,27 +235,10 @@ class PanelHome extends SubscribeMixin(LitElement) {
           action: this._editArea,
         },
       ];
-    } else if (!path || path === "overview") {
-      this._extraActionItems = [
-        {
-          icon: mdiPencil,
-          labelKey: "ui.panel.lovelace.menu.edit_overview",
-          action: this._editHome,
-        },
-      ];
     } else {
       this._extraActionItems = undefined;
     }
   }
-
-  private _editHome = () => {
-    showEditHomeDialog(this, {
-      config: this._config ?? {},
-      saveConfig: async (config) => {
-        await this._saveConfig(config);
-      },
-    });
-  };
 
   private _editArea = async () => {
     const path = this.route?.path?.split("/")[1];
@@ -421,6 +383,7 @@ class PanelHome extends SubscribeMixin(LitElement) {
         favorite_entities: this._config?.favorite_entities,
         dock_items: this._config?.dock_items,
         home_picture: this._config?.home_picture,
+        area_panels: this._config?.area_panels,
         home_panel: true,
         hide_welcome_message: this._config?.hide_welcome_message,
         hide_suggested_entities: this._config?.hide_suggested_entities,
@@ -451,26 +414,6 @@ class PanelHome extends SubscribeMixin(LitElement) {
       setEditMode: () => undefined,
       showToast: () => undefined,
     };
-  }
-
-  private async _saveConfig(config: HomeFrontendSystemData): Promise<void> {
-    try {
-      await saveFrontendSystemData(this.hass.connection, "home", config);
-      this._config = config || {};
-    } catch (err: any) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to save home configuration:", err);
-      showToast(this, {
-        message: this.hass.localize("ui.panel.home.editor.save_failed"),
-        duration: 0,
-        dismissable: true,
-      });
-      return;
-    }
-    showToast(this, {
-      message: this.hass.localize("ui.common.successfully_saved"),
-    });
-    this._setLovelace();
   }
 
   static readonly styles: CSSResultGroup = css`

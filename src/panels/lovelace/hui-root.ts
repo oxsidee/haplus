@@ -26,6 +26,7 @@ import { ifDefined } from "lit/directives/if-defined";
 import memoizeOne from "memoize-one";
 import { isComponentLoaded } from "../../common/config/is_component_loaded";
 import { UndoRedoController } from "../../common/controllers/undo-redo-controller";
+import type { HASSDomEvent } from "../../common/dom/fire_event";
 import { fireEvent } from "../../common/dom/fire_event";
 import { ctrlOrCmdLabel } from "../../common/keyboard/ctrl-or-cmd";
 import { goBack, navigate, replaceCurrentUrl } from "../../common/navigate";
@@ -561,6 +562,7 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
     </ha-tab-group>`;
 
     const isSubview = curViewConfig?.subview;
+    const hideHeader = !!curViewConfig?.hide_header && !this._editMode;
     const hasTabViews = views.filter((view) => !view.subview).length > 1;
 
     return html`
@@ -569,9 +571,10 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
           "edit-mode": this._editMode,
           narrow: this.narrow,
           embedded: this.embedded,
+          "no-header": hideHeader,
         })}
       >
-        <div class="header">
+        <div class="header" ?hidden=${hideHeader}>
           <slot name="toolbar">
             <div class="toolbar">
               ${
@@ -721,6 +724,7 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
 
   public connectedCallback(): void {
     super.connectedCallback();
+    this.addEventListener("hui-root-action", this._handleRootAction);
 
     if (this.embedded) {
       return;
@@ -907,6 +911,32 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
       dismissText: this.hass.localize("ui.common.not_now"),
       confirm: () => location.reload(),
     });
+  };
+
+  private _handleRootAction = (ev: Event) => {
+    const { action } = (ev as HASSDomEvent<HASSDomEvents["hui-root-action"]>)
+      .detail;
+    ev.stopPropagation();
+    switch (action) {
+      case "search":
+        this._showQuickBar();
+        break;
+      case "assist":
+        this._showVoiceCommandDialog();
+        break;
+      case "add_device":
+        this._addDevice();
+        break;
+      case "create_automation":
+        this._createAutomation();
+        break;
+      case "create_area":
+        this._createArea();
+        break;
+      case "add_person":
+        this._addPerson();
+        break;
+    }
   };
 
   private _showQuickBar = () => {
@@ -1619,6 +1649,14 @@ class HUIRoot extends KeyboardShortcutMixin(LitElement) {
         a {
           color: var(--text-primary-color, white);
         }
+        .no-header hui-view-container {
+          padding-top: calc(
+            var(--safe-area-inset-top) + var(--view-container-padding-top, 0px)
+          );
+        }
+        .header[hidden] {
+          display: none;
+        }
         hui-view-container {
           position: relative;
           display: flex;
@@ -1694,6 +1732,15 @@ declare global {
     // A view to show, fired instead of navigating when embedded. `back` is
     // set for the back button of a subview.
     "view-navigate": { path: string; back?: boolean };
+    "hui-root-action": {
+      action:
+        | "search"
+        | "assist"
+        | "add_device"
+        | "create_automation"
+        | "create_area"
+        | "add_person";
+    };
   }
 
   interface HTMLElementEventMap {

@@ -1,7 +1,10 @@
 import { STATE_NOT_RUNNING } from "home-assistant-js-websocket";
 import { ReactiveElement } from "lit";
 import { customElement } from "lit/decorators";
-import type { SecurityAlertEntityConfig } from "../../../../data/frontend";
+import type {
+  AreaPanelConfig,
+  SecurityAlertEntityConfig,
+} from "../../../../data/frontend";
 import type { ShortcutItem } from "../../../../data/home_shortcuts";
 import type { LovelaceConfig } from "../../../../data/lovelace/config/types";
 import type { LovelaceViewRawConfig } from "../../../../data/lovelace/config/view";
@@ -24,6 +27,7 @@ export interface HomeDashboardStrategyConfig {
   favorite_entities?: string[];
   dock_items?: string[];
   home_picture?: string;
+  area_panels?: Record<string, AreaPanelConfig>;
   home_panel?: boolean;
   hide_welcome_message?: boolean;
   hide_suggested_entities?: boolean;
@@ -74,7 +78,13 @@ export class HomeDashboardStrategy extends ReactiveElement {
           path: path,
           subview: true,
           type: "panel",
-          cards: [{ type: "area-scene", area: area.area_id }],
+          cards: [
+            {
+              type: "area-scene",
+              area: area.area_id,
+              panel: config.area_panels?.[area.area_id],
+            },
+          ],
         };
       }
 
@@ -131,6 +141,7 @@ export class HomeDashboardStrategy extends ReactiveElement {
               icon: "mdi:home",
               path: "overview",
               type: "panel",
+              hide_header: true,
               cards: [
                 {
                   type: "home-scene",

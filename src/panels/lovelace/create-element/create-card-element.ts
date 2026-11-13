@@ -46,6 +46,7 @@ const LAZY_LOAD_TYPES = {
     import("../cards/energy/hui-energy-carbon-consumed-gauge-card"),
   "energy-date-selection": () =>
     import("../cards/energy/hui-energy-date-selection-card"),
+  "energy-heading": () => import("../cards/energy/hui-energy-heading-card"),
   "energy-devices-graph": () =>
     import("../cards/energy/hui-energy-devices-graph-card"),
   "energy-devices-detail-graph": () =>

@@ -34,10 +34,7 @@ class HaConfigNavigationList extends LitElement {
               .href=${externalApp ? undefined : page.path}
               @click=${externalApp ? this._handleExternalApp : undefined}
             >
-              <div
-                slot="start"
-                class=${page.iconColor ? "icon-background" : ""}
-              >
+              <div slot="start" class="icon-background">
                 <ha-svg-icon
                   .path=${page.iconPath}
                   .secondaryPath=${page.iconSecondaryPath}
@@ -69,22 +66,38 @@ class HaConfigNavigationList extends LitElement {
   }
 
   static styles: CSSResultGroup = css`
-    ha-svg-icon,
+    ha-list-nav::part(base) {
+      display: grid;
+      grid-template-columns: var(--ha-config-nav-columns, minmax(0, 1fr));
+      column-gap: var(--ha-config-nav-column-gap, 40px);
+    }
+    ha-list-item-button {
+      --ha-row-item-min-height: var(--ha-config-nav-row-height, 76px);
+      border-radius: 0;
+      border-bottom: 1px solid var(--divider-color);
+    }
+    ha-list-item-button::part(headline) {
+      font-size: var(--ha-font-size-l);
+      font-weight: var(--ha-font-weight-medium);
+    }
     ha-icon-next {
-      color: var(--secondary-text-color);
-      height: 24px;
-      width: 24px;
+      color: var(--disabled-text-color);
+      height: 20px;
+      width: 20px;
       display: block;
     }
-    ha-svg-icon {
-      padding: 8px;
-    }
     .icon-background {
-      border-radius: var(--ha-border-radius-lg);
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
       background-color: rgba(var(--rgb-primary-text-color), 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .icon-background ha-svg-icon {
       color: var(--primary-text-color);
+      --mdc-icon-size: 21px;
     }
   `;
 }

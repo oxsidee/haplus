@@ -24,6 +24,8 @@ export const coreStyles = css`
     --ha-control-border-radius: 14px;
     --ha-field-border-radius: 14px;
     --ha-dialog-border-radius: 28px;
+    --ha-input-search-height: 46px;
+    --ha-input-search-border-radius: 23px;
     --button-height: 44px;
     --ha-area-card-border-radius: var(--ha-border-radius-3xl);
     --ha-picture-border-radius: var(--ha-border-radius-lg);

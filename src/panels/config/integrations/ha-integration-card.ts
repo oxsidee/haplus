@@ -449,10 +449,24 @@ export class HaIntegrationCard extends LitElement {
           outline: var(--ha-border-width-md) solid var(--primary-color);
           outline-offset: 2px;
         }
+        ha-card {
+          --ha-card-border-radius: 26px;
+        }
         ha-row-item {
-          --ha-row-item-padding-block: var(--ha-space-4);
-          --ha-row-item-padding-inline: var(--ha-space-4);
+          --ha-row-item-padding-block: 18px;
+          --ha-row-item-padding-inline: 20px;
           --ha-row-item-gap: var(--ha-space-4);
+          min-height: 128px;
+        }
+        ha-row-item::part(base) {
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: space-between;
+          min-height: 128px;
+          box-sizing: border-box;
+        }
+        ha-row-item::part(content) {
+          width: 100%;
         }
         ha-row-item::part(headline) {
           font-size: var(--ha-font-size-l);
@@ -467,8 +481,12 @@ export class HaIntegrationCard extends LitElement {
           white-space: nowrap;
         }
         img {
-          width: 40px;
-          height: 40px;
+          width: 48px;
+          height: 48px;
+          box-sizing: border-box;
+          padding: 9px;
+          border-radius: 16px;
+          background: rgba(var(--rgb-primary-text-color), 0.06);
         }
         .supporting-text {
           display: flex;

@@ -263,13 +263,13 @@ export const colorStyles = css`
     --history-unknown-color: var(--dark-grey-color);
 
     --state-icon-error-color: var(--error-state-color, var(--error-color));
-    --sidebar-text-color: var(--primary-text-color);
     --sidebar-background-color: #f8f7f5;
     --sidebar-selected-text-color: var(--primary-text-color);
     --sidebar-selected-background-color: var(--primary-text-color);
     --sidebar-selected-background-opacity: 0.07;
-    --sidebar-selected-icon-color: var(--primary-text-color);
-    --sidebar-icon-color: rgba(var(--rgb-primary-text-color), 0.62);
+    --sidebar-selected-icon-color: var(--accent-color);
+    --sidebar-text-color: var(--secondary-text-color);
+    --sidebar-icon-color: var(--secondary-text-color);
     --slider-color: var(--primary-color);
     --slider-secondary-color: var(--light-primary-color);
     --slider-track-color: var(--scrollbar-thumb-color);
@@ -296,7 +296,7 @@ export const colorStyles = css`
     --mdc-theme-text-hint-on-background: var(--secondary-text-color);
     --mdc-theme-text-icon-on-background: var(--secondary-text-color);
     --mdc-theme-error: var(--error-color);
-    --app-header-text-color: var(--sidebar-text-color);
+    --app-header-text-color: var(--primary-text-color);
     --app-header-background-color: var(--primary-background-color);
     --app-header-border-bottom: none;
     --app-header-edit-background-color: #141517;

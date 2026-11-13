@@ -574,8 +574,15 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
         })}
       >
         <ha-user-badge slot="start" .user=${this.hass.user}></ha-user-badge>
-        <span class="item-text" slot="headline"
-          >${this.hass.user ? this.hass.user.name : nothing}</span
+        <span class="item-text user-text" slot="headline"
+          ><span>${this.hass.user ? this.hass.user.name : nothing}</span>
+          <span class="user-role"
+            >${this.hass.localize(
+              this.hass.user?.is_admin
+                ? "ui.sidebar.role_admin"
+                : "ui.sidebar.role_user"
+            )}</span
+          ></span
         >
       </ha-list-item-button>
       ${
@@ -714,6 +721,10 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
           color: var(--sidebar-icon-color);
         }
         .title {
+          font-size: 12px;
+          font-weight: var(--ha-font-weight-medium);
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
           margin-left: 3px;
           margin-inline-start: 3px;
           margin-inline-end: initial;
@@ -775,9 +786,9 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
 
         ha-list-item-button {
           flex-shrink: 0;
-          margin: 0 var(--ha-space-1) var(--ha-space-1);
-          border-radius: var(--ha-border-radius-xl);
-          --ha-row-item-min-height: var(--ha-space-11);
+          margin: 0 var(--ha-space-1) 2px;
+          border-radius: 14px;
+          --ha-row-item-min-height: 46px;
           --ha-row-item-padding-block: 0;
           --ha-row-item-padding-inline: var(--ha-space-3);
           width: var(--ha-space-12);
@@ -795,10 +806,13 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
         }
 
         ha-list-item-button.selected::part(headline) {
-          color: var(--sidebar-selected-icon-color);
+          color: var(--sidebar-selected-text-color);
+        }
+        ha-list-item-button.selected .item-text {
+          font-weight: var(--ha-font-weight-medium);
         }
         ha-list-item-button.selected::before {
-          border-radius: var(--ha-border-radius-xl);
+          border-radius: 14px;
           position: absolute;
           top: 0;
           right: 0;
@@ -857,13 +871,16 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
           display: flex;
           justify-content: center;
           align-items: center;
-          min-width: var(--ha-space-2);
-          border-radius: var(--ha-border-radius-xl);
-          font-weight: var(--ha-font-weight-normal);
+          min-width: 22px;
+          height: 22px;
+          box-sizing: border-box;
+          border-radius: 11px;
+          font-size: 12px;
+          font-weight: 600;
           line-height: normal;
           background-color: var(--accent-color);
-          padding: 2px 6px;
-          color: var(--text-accent-color, var(--text-primary-color));
+          padding: 0 6px;
+          color: #141517;
           transition:
             opacity var(--ha-animation-duration-normal) ease,
             transform var(--ha-animation-duration-normal) ease;
@@ -887,6 +904,21 @@ class HaSidebar extends SubscribeMixin(ScrollableFadeMixin(LitElement)) {
 
         /* Keep the rounded-square avatar clear of the row edges and
            centered in the collapsed item: 8px + 32px + 8px = 48px */
+        .user-text {
+          display: flex !important;
+          flex-direction: column;
+          gap: 1px;
+          line-height: 1.25;
+        }
+        .user-role {
+          font-size: 12px;
+          font-weight: var(--ha-font-weight-normal);
+          color: var(--secondary-text-color);
+        }
+        ha-list-nav.after-spacer {
+          border-top: 1px solid var(--divider-color);
+          padding-top: var(--ha-space-3);
+        }
         ha-user-badge {
           width: var(--ha-space-8);
           height: var(--ha-space-8);
